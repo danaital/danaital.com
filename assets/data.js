@@ -55,6 +55,14 @@ window.SITE_DATA = {
       stack: ["React", "NestJS", "Redis"],
       link: "https://github.com/danaital/expenses-frontend",
     },
+    {
+      name: "Reports System",
+      tag: "Ofran · internal tool",
+      blurb:
+        "An internal desktop tool built for Ofran Worldwide Car Rental that ingests supplier rate spreadsheets (e.g. Europcar one-way rates across Japan) and turns raw Excel data into clean, structured reports. Python with an object-oriented core and a GUI so non-technical staff can run it directly.",
+      stack: ["Python", "GUI", "Excel data"],
+      link: "https://github.com/danaital/Ofran_project",
+    },
   ],
 
   /* -------------------------------------------------------------------------
