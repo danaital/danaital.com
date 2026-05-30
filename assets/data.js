@@ -56,7 +56,7 @@ window.SITE_DATA = {
       blurb:
         "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The repos here use synthetic sample data — no real client or rate data.",
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
-      link: "https://github.com/danaital/reports-frontend",
+      link: "",
       demo: "", // TODO: live demo URL — button appears once set
       inquire: true,
       repos: [
