@@ -203,7 +203,7 @@ a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-
 
 /* ---- Experience & Education ---- */
 .xp-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 0; row-gap: 44px; }
-.xp-col { padding: 0 52px; }
+.xp-col { padding: 0 44px; }
 .xp-col:first-child { padding-left: 0; border-right: 1px solid var(--line); }
 .xp-col:last-child { padding-right: 0; }
 .xp-col-title {
@@ -253,10 +253,10 @@ a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-
 }
 .cert-name { font-weight: 600; color: var(--ink); }
 .cert-meta { font-size: .85rem; color: var(--ink-soft); }
-@media (max-width: 760px) {
+@media (max-width: 920px) {
   .xp-grid { grid-template-columns: 1fr; row-gap: 40px; }
   .xp-col { padding: 0; }
-  .xp-col:first-child { border-right: 0; }
+  .xp-col:first-child { border-right: 0; padding-bottom: 8px; }
 }
 
 /* ---- Contact form ---- */
