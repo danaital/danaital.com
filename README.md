@@ -1,7 +1,7 @@
-# danattal.com — Tal Danai's personal site
+# danaital.com — Tal Danai's personal site
 
 A static, zero-build personal website (HTML + CSS + a little vanilla JS),
-deployed to **GitHub Pages** at <https://danattal.com>.
+deployed to **GitHub Pages** at <https://danaital.com>.
 
 ## Editing content
 
@@ -25,5 +25,5 @@ python3 -m http.server 8080
 ## Deployment
 
 Hosted on GitHub Pages from this repo. The `CNAME` file pins the custom domain
-`danattal.com`. DNS is configured at GoDaddy (A records to GitHub Pages IPs +
+`danaital.com`. DNS is configured at GoDaddy (A records to GitHub Pages IPs +
 a `www` CNAME). See repo Settings → Pages.

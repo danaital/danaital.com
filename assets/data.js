@@ -24,6 +24,14 @@ window.SITE_DATA = {
       tagClass: "tag-accent",
     },
     {
+      name: "Phonics",
+      tag: "Reichman miLAB · hardware",
+      blurb:
+        "An interactive tabletop device that helps children learn to read by building words from physical, RFID-tagged letter tokens. A Raspberry Pi reads the tokens (MFRC522 RFID), gives real-time feedback through NeoPixel LEDs, physical buttons and audio, and is driven by a Flask + SQLite backend. Designed, built and user-tested at Reichman University's (IDC) miLAB; the v2 reworked it into a clean Raspberry-Pi API with a persistence layer.",
+      stack: ["Python", "Raspberry Pi", "RFID", "Flask", "SQLite", "NeoPixel"],
+      link: "http://milab.idc.ac.il/teaching/projects/phonics/",
+    },
+    {
       name: "Zoom Virtual Assistant",
       tag: "IoT final project",
       blurb:
