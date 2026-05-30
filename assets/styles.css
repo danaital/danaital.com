@@ -149,9 +149,26 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; color: var(--ink); lin
 .project-blurb { color: var(--ink-soft); font-size: .98rem; margin: 0 0 18px; flex: 1; }
 .stack { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; margin: 0 0 20px; padding: 0; }
 .stack li { font-size: .78rem; color: var(--accent-ink); background: rgba(154,107,47,.08); padding: 3px 10px; border-radius: 6px; font-weight: 500; }
-.project-foot { margin-top: auto; }
+/* Multi-repo preview */
+.repos { margin: 0 0 18px; }
+.repos-label {
+  display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-soft); font-weight: 600; margin-bottom: 8px;
+}
+.repo-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 7px; }
+.repo-chip {
+  display: inline-block; font-size: .78rem; padding: 4px 11px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
+a.repo-chip { transition: .15s ease; }
+a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-decoration: none; }
+.repo-chip-private { color: var(--ink-soft); font-style: italic; opacity: .9; }
+
+.project-foot { margin-top: auto; display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap; }
 .project-link { font-weight: 600; font-size: .92rem; }
 .project-private { font-size: .85rem; color: var(--ink-soft); font-style: italic; }
+.project-inquire { font-weight: 600; font-size: .92rem; color: var(--accent-ink); }
+.project-inquire:hover { text-decoration: underline; }
 
 /* ---- Writing ---- */
 .writing-list { display: grid; gap: 18px; }

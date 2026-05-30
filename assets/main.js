@@ -44,6 +44,24 @@
       (p.stack || []).forEach(function (t) { stack.appendChild(el("li", { text: t })); });
       card.appendChild(stack);
 
+      // Multi-repo preview: show the constituent repositories/services.
+      if (p.repos && p.repos.length > 1) {
+        var reposWrap = el("div", { class: "repos" });
+        reposWrap.appendChild(el("span", { class: "repos-label", text: p.repos.length + " repositories" }));
+        var repoList = el("ul", { class: "repo-chips" });
+        p.repos.forEach(function (rp) {
+          var li = el("li");
+          if (rp.url) {
+            li.appendChild(el("a", { class: "repo-chip", href: rp.url, target: "_blank", rel: "noopener" }, [rp.label]));
+          } else {
+            li.appendChild(el("span", { class: "repo-chip repo-chip-private", title: "Private", text: rp.label }));
+          }
+          repoList.appendChild(li);
+        });
+        reposWrap.appendChild(repoList);
+        card.appendChild(reposWrap);
+      }
+
       var footer = el("div", { class: "project-foot" });
       if (p.link) {
         footer.appendChild(el("a", {
@@ -52,9 +70,28 @@
       } else {
         footer.appendChild(el("span", { class: "project-private", text: "Private repository" }));
       }
+      if (p.inquire) {
+        footer.appendChild(el("a", {
+          class: "project-inquire", href: "#contact", "data-project": p.name,
+        }, ["Inquire about this →"]));
+      }
       card.appendChild(footer);
 
       grid.appendChild(card);
+    });
+
+    // Per-project inquiry: prefill the contact form with the project and jump to it.
+    grid.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest(".project-inquire");
+      if (!a) return;
+      e.preventDefault();
+      var proj = a.getAttribute("data-project") || "your work";
+      var msg = document.getElementById("cf-msg");
+      if (msg) msg.value = 'Hi Tal, I\'d love to talk to you about "' + proj + '". ';
+      var contact = document.getElementById("contact");
+      if (contact) contact.scrollIntoView({ behavior: "smooth" });
+      setTimeout(function () { if (msg) msg.focus(); }, 450);
+      showToast("Ask away about " + proj + " ↓");
     });
   }
 

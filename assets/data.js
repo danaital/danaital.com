@@ -39,6 +39,14 @@ window.SITE_DATA = {
       stack: ["React", "React Native", "Expo", "NestJS", "Prisma", "Postgres", "FastAPI", "Python", "Whisper"],
       link: "",
       tagClass: "tag-accent",
+      inquire: true,
+      repos: [
+        { label: "Web · React + Vite", url: "" },
+        { label: "Mobile · React Native + Expo", url: "" },
+        { label: "Core API · NestJS + Prisma", url: "" },
+        { label: "ML API · FastAPI", url: "" },
+        { label: "UI Kit · design system", url: "" },
+      ],
     },
     {
       name: "Phonics",
@@ -47,6 +55,7 @@ window.SITE_DATA = {
         "An interactive tabletop device that helps children learn to read by building words from physical, RFID-tagged letter tokens. A Raspberry Pi reads the tokens (MFRC522 RFID), gives real-time feedback through NeoPixel LEDs, physical buttons and audio, and is driven by a Flask + SQLite backend. Designed, built and user-tested at Reichman University's (IDC) miLAB; the v2 reworked it into a clean Raspberry-Pi API with a persistence layer.",
       stack: ["Python", "Raspberry Pi", "RFID", "Flask", "SQLite", "NeoPixel"],
       link: "http://milab.idc.ac.il/teaching/projects/phonics/",
+      inquire: true,
     },
     {
       name: "Beacon of Light",
@@ -55,6 +64,7 @@ window.SITE_DATA = {
         "An AI-powered fact-checking platform. Submit an article by URL or pasted text and it scores accuracy, neutrality, source quality and context, assigns each key claim a verdict with sources, and generates cited corrections plus a clean corrected version — then lets you discuss the result with a neutral assistant. Self-contained and local-first: Next.js (App Router), a file-based SQLite store, and any OpenAI-compatible local LLM, with a deterministic offline mock.",
       stack: ["Next.js", "TypeScript", "styled-components", "SQLite", "Local LLM"],
       link: "",
+      inquire: true,
     },
     {
       name: "Reports System",
@@ -63,6 +73,10 @@ window.SITE_DATA = {
         "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The day-to-day tool the team uses to work with rental-rate data.",
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
       link: "",
+      repos: [
+        { label: "Frontend · React + Vite", url: "" },
+        { label: "Backend · NestJS", url: "" },
+      ],
     },
     {
       name: "Zoom Virtual Assistant",
@@ -79,6 +93,10 @@ window.SITE_DATA = {
         "A course-management system with a React front end and a NestJS back end — handling courses, enrolment and administration end to end.",
       stack: ["React", "TypeScript", "NestJS"],
       link: "https://github.com/danaital/course-management-frontend",
+      repos: [
+        { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
+        { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
+      ],
     },
   ],
 
