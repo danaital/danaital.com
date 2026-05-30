@@ -3,15 +3,60 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Apply saved/system theme before first paint (avoids flash of wrong theme) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+
   <title>Tal Danai — Full Stack Developer</title>
   <meta name="description" content="Tal Danai — full-stack developer building end-to-end products across React, React Native, NestJS and FastAPI. Intro to Computer Science recitation instructor." />
+  <meta name="author" content="Tal Danai" />
+  <meta name="theme-color" content="#fbfaf7" />
+  <link rel="canonical" href="https://danaital.com/" />
 
   <!-- Open Graph / social -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Tal Danai" />
   <meta property="og:title" content="Tal Danai — Full Stack Developer" />
   <meta property="og:description" content="Full-stack developer building end-to-end products. Intro to CS recitation instructor." />
-  <meta property="og:url" content="https://danaital.com" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://danaital.com/" />
+  <meta property="og:image" content="https://danaital.com/assets/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Tal Danai — Full Stack Developer" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tal Danai — Full Stack Developer" />
+  <meta name="twitter:description" content="Full-stack developer building end-to-end products. Intro to CS recitation instructor." />
+  <meta name="twitter:image" content="https://danaital.com/assets/og.png" />
+
+  <!-- Structured data: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Tal Danai",
+    "url": "https://danaital.com/",
+    "image": "https://danaital.com/assets/og.png",
+    "jobTitle": "Full Stack Developer",
+    "email": "mailto:taldanai@icloud.com",
+    "worksFor": { "@type": "Organization", "name": "Ofran Worldwide Car Rental" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Reichman University (IDC Herzliya)" },
+    "knowsAbout": ["TypeScript", "React", "React Native", "Node.js", "NestJS", "FastAPI", "Python", "PostgreSQL"],
+    "sameAs": [
+      "https://github.com/danaital",
+      "https://www.linkedin.com/in/tal-danai/"
+    ]
+  }
+  </script>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='Georgia,serif'>T</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,17 +70,28 @@
   <header class="site-header" id="top">
     <nav class="nav container" aria-label="Primary">
       <a class="brand" href="#top">Tal&nbsp;Danai</a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#education">Education</a></li>
-        <li><a href="#writing">Writing</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <div class="nav-actions">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#education">Education</a></li>
+          <li hidden><a href="#writing">Writing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+        </button>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </nav>
   </header>
 
@@ -132,8 +188,8 @@
       </div>
     </section>
 
-    <!-- WRITING -->
-    <section class="section section-alt" id="writing">
+    <!-- WRITING (revealed by JS only when src/data.ts `posts` is non-empty) -->
+    <section class="section section-alt" id="writing" hidden>
       <div class="container">
         <header class="section-head">
           <h2>Writing &amp; Posts</h2>
@@ -144,33 +200,47 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="section" id="contact">
-      <div class="container contact">
+    <section class="section section-contact" id="contact">
+      <div class="container">
         <header class="section-head">
           <h2>Get in touch</h2>
-          <p>Open to interesting work and collaborations.</p>
+          <p>Open to interesting work and collaborations — let's talk.</p>
         </header>
-        <ul class="contact-links" id="contact-links"><!-- injected --></ul>
 
-        <form class="contact-form" id="contact-form" novalidate>
-          <div class="field">
-            <label for="cf-name">Name</label>
-            <input id="cf-name" name="name" type="text" autocomplete="name" required />
+        <div class="contact-grid">
+          <div class="contact-intro">
+            <p class="contact-lede">
+              Have a project in mind, a role to fill, or just want to say hello?
+              Drop me a line through the form, or reach me directly — I usually
+              reply within a day.
+            </p>
+            <ul class="contact-methods" id="contact-links"><!-- injected --></ul>
           </div>
-          <div class="field">
-            <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" required />
-          </div>
-          <div class="field field-full">
-            <label for="cf-msg">Message</label>
-            <textarea id="cf-msg" name="message" rows="4" required></textarea>
-          </div>
-          <!-- honeypot: bots fill this, humans don't -->
-          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
-          <div class="field-full">
-            <button class="btn btn-primary" type="submit">Send message</button>
-          </div>
-        </form>
+
+          <form class="contact-form contact-card" id="contact-form" novalidate>
+            <h3 class="form-title">Send a message</h3>
+            <div class="form-fields">
+              <div class="field">
+                <label for="cf-name">Name</label>
+                <input id="cf-name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="cf-email">Email</label>
+                <input id="cf-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field field-full">
+                <label for="cf-msg">Message</label>
+                <textarea id="cf-msg" name="message" rows="5" required></textarea>
+              </div>
+              <!-- honeypot: bots fill this, humans don't -->
+              <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
+              <div class="field-full">
+                <button class="btn btn-primary btn-block" type="submit">Send message</button>
+                <p class="form-note">Or email me at <a href="mailto:taldanai@icloud.com">taldanai@icloud.com</a></p>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
   </main>
