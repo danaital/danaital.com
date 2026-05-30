@@ -104,7 +104,7 @@
       blurb:
         "An interactive tabletop device that helps children learn to read by building words from physical, RFID-tagged letter tokens. A Raspberry Pi reads the tokens (MFRC522 RFID), gives real-time feedback through NeoPixel LEDs, physical buttons and audio, and is driven by a Flask + SQLite backend. Designed, built and user-tested at Reichman University's (IDC) miLAB; the v2 reworked it into a clean Raspberry-Pi API with a persistence layer.",
       stack: ["Python", "Raspberry Pi", "RFID", "Flask", "SQLite", "NeoPixel"],
-      link: "http://milab.idc.ac.il/teaching/projects/phonics/",
+      link: "",
       inquire: true,
     },
     {
@@ -112,7 +112,7 @@
       tag: "TypeScript · open source",
       blurb:
         "The site you're looking at — a TypeScript codebase compiled to static HTML/CSS/JS with no framework. Data-driven project/experience cards, timed toast notifications, a working contact form (Web3Forms + ntfy phone push), and a daily GitHub Actions job that surfaces new repos and audits repository privacy. Built and shipped to GitHub Pages through a CI pipeline.",
-      stack: ["TypeScript", "HTML", "CSS", "GitHub Actions", "GitHub Pages"],
+      stack: ["TypeScript", "HTML", "CSS"],
       link: "https://github.com/danaital/danaital.com",
     },
   ],
