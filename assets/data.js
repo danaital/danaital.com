@@ -22,7 +22,7 @@ window.SITE_DATA = {
 
   /* Core technologies shown in the strip under the hero. */
   skills: [
-    "TypeScript", "React", "React Native", "iOS", "Node.js", "NestJS",
+    "TypeScript", "React", "React Native", "Node.js", "NestJS",
     "FastAPI", "Python", "Java", "Prisma", "PostgreSQL", "Redis", "C++",
   ],
 
