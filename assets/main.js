@@ -44,24 +44,6 @@
       (p.stack || []).forEach(function (t) { stack.appendChild(el("li", { text: t })); });
       card.appendChild(stack);
 
-      // Multi-repo preview: show the constituent repositories/services.
-      if (p.repos && p.repos.length > 1) {
-        var reposWrap = el("div", { class: "repos" });
-        reposWrap.appendChild(el("span", { class: "repos-label", text: "Repositories" }));
-        var repoList = el("ul", { class: "repo-chips" });
-        p.repos.forEach(function (rp) {
-          var li = el("li");
-          if (rp.url) {
-            li.appendChild(el("a", { class: "repo-chip", href: rp.url, target: "_blank", rel: "noopener" }, [rp.label]));
-          } else {
-            li.appendChild(el("span", { class: "repo-chip repo-chip-private", title: "Private", text: rp.label }));
-          }
-          repoList.appendChild(li);
-        });
-        reposWrap.appendChild(repoList);
-        card.appendChild(reposWrap);
-      }
-
       var footer = el("div", { class: "project-foot" });
       if (p.link) {
         footer.appendChild(el("a", {
