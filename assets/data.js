@@ -51,7 +51,8 @@ window.SITE_DATA = {
     },
     {
       name: "Reports System",
-      tag: "Ofran · internal platform",
+      tag: "Flagship · Ofran platform",
+      tagClass: "tag-accent",
       blurb:
         "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The repos here use synthetic sample data — no real client or rate data.",
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
