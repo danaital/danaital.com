@@ -60,9 +60,10 @@
           </div>
         </div>
         <div class="hero-portrait">
-          <!-- Replace this monogram with a real photo any time:
-               <img src="assets/portrait.jpg" alt="Tal Danai" /> -->
-          <div class="monogram" aria-label="Tal Danai monogram" role="img">
+          <img class="portrait" src="assets/portrait.jpg" alt="Tal Danai"
+               width="230" height="230"
+               onerror="this.style.display='none';var m=document.getElementById('mono-fallback');if(m)m.style.display='grid';" />
+          <div class="monogram" id="mono-fallback" aria-label="Tal Danai monogram" role="img" style="display:none">
             <span>TD</span>
           </div>
           <a class="inquiry" href="mailto:taldanai@icloud.com?subject=Inquiry">
