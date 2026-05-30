@@ -70,12 +70,12 @@ window.SITE_DATA = {
       name: "Reports System",
       tag: "Ofran · internal platform",
       blurb:
-        "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The day-to-day tool the team uses to work with rental-rate data.",
+        "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The repos here use synthetic sample data — no real client or rate data.",
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
-      link: "",
+      link: "https://github.com/danaital/reports-frontend",
       repos: [
-        { label: "Frontend · React + Vite", url: "" },
-        { label: "Backend · NestJS", url: "" },
+        { label: "Frontend · React + Vite", url: "https://github.com/danaital/reports-frontend" },
+        { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
       ],
     },
     {
