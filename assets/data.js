@@ -96,6 +96,13 @@ window.SITE_DATA = {
             link: "http://milab.idc.ac.il/teaching/projects/phonics/",
             inquire: true,
         },
+        {
+            name: "This Website",
+            tag: "TypeScript · open source",
+            blurb: "The site you're looking at — a TypeScript codebase compiled to static HTML/CSS/JS with no framework. Data-driven project/experience cards, timed toast notifications, a working contact form (Web3Forms + ntfy phone push), and a daily GitHub Actions job that surfaces new repos and audits repository privacy. Built and shipped to GitHub Pages through a CI pipeline.",
+            stack: ["TypeScript", "HTML", "CSS", "GitHub Actions", "GitHub Pages"],
+            link: "https://github.com/danaital/danaital.com",
+        },
     ],
     /* -------------------------------------------------------------------------
        Writing / LinkedIn posts.
