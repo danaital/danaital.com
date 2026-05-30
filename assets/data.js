@@ -78,6 +78,7 @@ window.SITE_DATA = {
       repos: [
         { label: "Frontend · React + Vite", url: "https://github.com/danaital/reports-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
+        { label: "AI Ops · report generator", url: "https://github.com/danaital/reports-ai-ops" },
       ],
     },
     {
