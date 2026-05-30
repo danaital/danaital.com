@@ -88,8 +88,9 @@ window.SITE_DATA = {
       blurb:
         "A course-management system with a React front end and a NestJS back end — handling courses, enrolment and administration end to end.",
       stack: ["React", "TypeScript", "NestJS"],
-      link: "https://github.com/danaital/course-management-frontend",
+      link: "",
       demo: "", // TODO: live demo URL — button appears once set
+      showRepos: true,
       repos: [
         { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
