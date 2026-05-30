@@ -55,30 +55,6 @@ window.SITE_DATA = {
       stack: ["React", "NestJS", "Redis"],
       link: "https://github.com/danaital/expenses-frontend",
     },
-    {
-      name: "Flights Searcher",
-      tag: "Web app",
-      blurb:
-        "An airline / flight search application built in TypeScript. Search and compare flights from a clean, focused UI.",
-      stack: ["TypeScript", "React"],
-      link: "https://replit.com/@taldanai/AirlineSearcher",
-    },
-    {
-      name: "Machine Learning Course",
-      tag: "Coursework · notebooks",
-      blurb:
-        "A collection of machine-learning coursework and experiments in Jupyter notebooks — models, training and analysis.",
-      stack: ["Python", "Jupyter", "ML"],
-      link: "https://github.com/danaital/Machine_Learning_Course",
-    },
-    {
-      name: "IoT Projects",
-      tag: "Embedded systems",
-      blurb:
-        "A set of embedded / IoT projects in C++ — hardware experiments, sensors and microcontroller firmware.",
-      stack: ["C++", "IoT", "Embedded"],
-      link: "https://github.com/danaital/IoTProjects",
-    },
   ],
 
   /* -------------------------------------------------------------------------
