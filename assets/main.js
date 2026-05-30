@@ -259,8 +259,41 @@
             var name = (fd.get("name") || "").toString().trim();
             var email = (fd.get("email") || "").toString().trim();
             var message = (fd.get("message") || "").toString().trim();
-            if (!name || !email || !message) {
-                showToast("Please fill in every field.");
+            // Per-field required + format validation with inline error messages.
+            var setErr = function (id, msg) {
+                var inp = document.getElementById(id);
+                var field = inp && inp.closest(".field");
+                if (!field)
+                    return;
+                field.classList.toggle("has-error", !!msg);
+                var fe = field.querySelector(".field-err");
+                if (msg) {
+                    if (!fe) {
+                        fe = el("span", { class: "field-err" });
+                        field.appendChild(fe);
+                    }
+                    fe.textContent = msg;
+                }
+                else if (fe) {
+                    fe.textContent = "";
+                }
+            };
+            var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            var firstBad = "";
+            setErr("cf-name", name ? "" : "Please enter your name.");
+            if (!name)
+                firstBad = firstBad || "cf-name";
+            setErr("cf-email", !email ? "Please enter your email." : (!emailOk ? "Enter a valid email address." : ""));
+            if (!email || !emailOk)
+                firstBad = firstBad || "cf-email";
+            setErr("cf-msg", message ? "" : "Please enter a message.");
+            if (!message)
+                firstBad = firstBad || "cf-msg";
+            if (firstBad) {
+                var fb = document.getElementById(firstBad);
+                if (fb)
+                    fb.focus();
+                showToast("Please fix the highlighted fields.");
                 return;
             }
             // Fallback while the form backend isn't configured: open the visitor's email.
@@ -306,6 +339,20 @@
                 .catch(function () { showToast("Network error — please email me directly.", 5000); })
                 .then(function () { if (btn)
                 btn.disabled = false; });
+        });
+        // Clear a field's error as soon as the user starts fixing it.
+        ["cf-name", "cf-email", "cf-msg"].forEach(function (id) {
+            var inp = document.getElementById(id);
+            if (inp)
+                inp.addEventListener("input", function () {
+                    var field = inp.closest(".field");
+                    if (field) {
+                        field.classList.remove("has-error");
+                        var fe = field.querySelector(".field-err");
+                        if (fe)
+                            fe.textContent = "";
+                    }
+                });
         });
     }
     /* ---- Year ---- */

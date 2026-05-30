@@ -266,7 +266,13 @@ a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-
 /* ---- Contact form ---- */
 .contact-form {
   margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  max-width: 640px;
 }
+.field.has-error input,
+.field.has-error textarea {
+  border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192, 57, 43, .12);
+}
+.field-err { color: #c0392b; font-size: .8rem; margin-top: 1px; }
 .field { display: flex; flex-direction: column; gap: 7px; }
 .field-full { grid-column: 1 / -1; }
 .contact-form label {
