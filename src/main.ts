@@ -100,19 +100,17 @@
     });
   }
 
-  /* ---- Writing ---- */
+  /* ---- Writing (hidden entirely while there are no posts) ---- */
   var writing = $("#writing-list");
   if (writing) {
     var posts = data.posts || [];
+    var writingSection: any = document.getElementById("writing");
+    var writingNav: any = document.querySelector('#nav-links a[href="#writing"]');
     if (posts.length === 0) {
-      writing.appendChild(el("div", { class: "writing-empty" }, [
-        el("p", { text: "I share notes and project updates on LinkedIn." }),
-        el("a", {
-          class: "btn btn-primary", href: data.linkedinUrl || "#",
-          target: "_blank", rel: "noopener",
-        }, ["Read my posts on LinkedIn →"]),
-      ]));
+      if (writingSection) writingSection.hidden = true;
+      if (writingNav && writingNav.parentElement) writingNav.parentElement.hidden = true;
     } else {
+      if (writingSection) writingSection.hidden = false;
       posts.forEach(function (post: any) {
         var item = el("a", {
           class: "writing-card", href: post.link || "#",
@@ -128,13 +126,30 @@
   }
 
   /* ---- Contact ---- */
+  var SVG = function (paths: string): string {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + "</svg>";
+  };
+  var contactIcons: any = {
+    email: SVG('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>'),
+    github: SVG('<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>'),
+    linkedin: SVG('<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>'),
+  };
+  var linkIcon = SVG('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>');
+  var arrowIcon = SVG('<path d="M7 17 17 7M7 7h10v10"/>');
   var contacts = $("#contact-links");
   if (contacts) {
     (data.contacts || []).forEach(function (c: any) {
+      var key = (c.label || "").toLowerCase();
+      var isMail = c.href.indexOf("mailto:") === 0;
       var li = el("li");
-      li.appendChild(el("a", { href: c.href, target: c.href.indexOf("mailto:") === 0 ? "_self" : "_blank", rel: "noopener" }, [
-        el("span", { class: "contact-label", text: c.label }),
-        el("span", { class: "contact-value", text: c.value }),
+      li.appendChild(el("a", { href: c.href, target: isMail ? "_self" : "_blank", rel: "noopener" }, [
+        el("span", { class: "contact-method-icon", html: contactIcons[key] || linkIcon }),
+        el("span", { class: "contact-method-body" }, [
+          el("span", { class: "contact-method-label", text: c.label }),
+          el("span", { class: "contact-method-value", text: c.value }),
+        ]),
+        el("span", { class: "contact-method-arrow", html: arrowIcon }),
       ]));
       contacts.appendChild(li);
     });
@@ -207,6 +222,62 @@
         navLinks.classList.remove("open");
         toggle.setAttribute("aria-expanded", "false");
       }
+    });
+  }
+
+  /* ---- Theme toggle (light / dark) ---- */
+  var themeBtn = $("#theme-toggle");
+  if (themeBtn) {
+    var applyTheme = function (t: string) {
+      document.documentElement.setAttribute("data-theme", t);
+      themeBtn.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme");
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", t === "dark" ? "#0e1320" : "#fbfaf7");
+    };
+    // Sync aria-label + theme-color with whatever the inline <head> script set.
+    applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+    themeBtn.addEventListener("click", function () {
+      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      try { localStorage.setItem("theme", next); } catch (e) {}
+      applyTheme(next);
+    });
+  }
+
+  /* ---- Active-section nav highlighting (scrollspy) ---- */
+  var navLinkEls: any[] = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[href^="#"]'));
+  var linkFor: any = {};
+  navLinkEls.forEach(function (a) {
+    var id = (a.getAttribute("href") || "").slice(1);
+    if (id && document.getElementById(id)) linkFor[id] = a;
+  });
+  var spyIds = Object.keys(linkFor);
+  if (spyIds.length && "IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          navLinkEls.forEach(function (a) { a.classList.remove("active"); });
+          var current = linkFor[(en.target as any).id];
+          if (current) current.classList.add("active");
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    spyIds.forEach(function (id) { spy.observe(document.getElementById(id)); });
+  }
+
+  /* ---- Scroll-reveal: fade sections/cards up as they enter (motion-safe) ---- */
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    var revealSelectors = [".section-head", ".project-card", ".edu-item", ".xp-item", ".writing-card", ".contact-intro", ".contact-form"];
+    var revObs = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); obs.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
+    revealSelectors.forEach(function (sel) {
+      Array.prototype.slice.call(document.querySelectorAll(sel)).forEach(function (el: any) {
+        el.classList.add("reveal");
+        revObs.observe(el);
+      });
     });
   }
 

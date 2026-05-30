@@ -8,8 +8,24 @@ deployed to **GitHub Pages** at <https://danaital.com>.
 - `index.html` + `assets/styles.css` — markup and styles.
 - **`src/data.ts`** — all site content (projects, skills, experience, education,
   certificates, writing/LinkedIn posts, contact, config).
-- **`src/main.ts`** — rendering + interactions (toasts, contact form, etc.).
+- **`src/main.ts`** — rendering + interactions (theme toggle, scrollspy,
+  scroll-reveal, toasts, contact form, etc.).
 - `tsc` compiles `src/*.ts` → `assets/*.js` (config in `tsconfig.json`).
+- `assets/og.png` — social share image (1200×630); `robots.txt` + `sitemap.xml`
+  and the JSON-LD/Open Graph tags in `index.html` cover SEO and link previews.
+
+## Theme, motion & SEO
+
+- **Dark mode** — a light/dark toggle lives in the nav. The choice persists in
+  `localStorage` and defaults to the visitor's `prefers-color-scheme`. An inline
+  script in `<head>` applies it before first paint (no flash). Colors are driven
+  by CSS custom properties; the dark palette lives under `:root[data-theme="dark"]`
+  in `assets/styles.css`.
+- **Active-section nav + scroll-reveal** — an `IntersectionObserver` highlights
+  the current section in the nav and fades sections/cards in as they enter.
+  Both honour `prefers-reduced-motion`.
+- **Social/OG image** — regenerate `assets/og.png` from a headless-Chrome render
+  if the branding changes (1200×630). Referenced via `og:image` / `twitter:image`.
 
 ## Editing content
 
@@ -39,7 +55,7 @@ the `posts` array — each `{ title, excerpt, date, link }`.
 
 ```bash
 npm run build
-node .claude/server.js     # serves on http://localhost:8123
+node .claude/server.js     # serves on http://localhost:3000
 ```
 
 ## Deployment
