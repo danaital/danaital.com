@@ -50,24 +50,6 @@ window.SITE_DATA = {
       ],
     },
     {
-      name: "Phonics",
-      tag: "Reichman miLAB · hardware",
-      blurb:
-        "An interactive tabletop device that helps children learn to read by building words from physical, RFID-tagged letter tokens. A Raspberry Pi reads the tokens (MFRC522 RFID), gives real-time feedback through NeoPixel LEDs, physical buttons and audio, and is driven by a Flask + SQLite backend. Designed, built and user-tested at Reichman University's (IDC) miLAB; the v2 reworked it into a clean Raspberry-Pi API with a persistence layer.",
-      stack: ["Python", "Raspberry Pi", "RFID", "Flask", "SQLite", "NeoPixel"],
-      link: "http://milab.idc.ac.il/teaching/projects/phonics/",
-      inquire: true,
-    },
-    {
-      name: "Beacon of Light",
-      tag: "AI fact-checking platform",
-      blurb:
-        "An AI-powered fact-checking platform. Submit an article by URL or pasted text and it scores accuracy, neutrality, source quality and context, assigns each key claim a verdict with sources, and generates cited corrections plus a clean corrected version — then lets you discuss the result with a neutral assistant. Self-contained and local-first: Next.js (App Router), a file-based SQLite store, and any OpenAI-compatible local LLM, with a deterministic offline mock.",
-      stack: ["Next.js", "TypeScript", "styled-components", "SQLite", "Local LLM"],
-      link: "",
-      inquire: true,
-    },
-    {
       name: "Reports System",
       tag: "Ofran · internal platform",
       blurb:
@@ -80,6 +62,15 @@ window.SITE_DATA = {
         { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
         { label: "AI Ops · report generator", url: "https://github.com/danaital/reports-ai-ops" },
       ],
+    },
+    {
+      name: "Beacon of Light",
+      tag: "AI fact-checking platform",
+      blurb:
+        "An AI-powered fact-checking platform. Submit an article by URL or pasted text and it scores accuracy, neutrality, source quality and context, assigns each key claim a verdict with sources, and generates cited corrections plus a clean corrected version — then lets you discuss the result with a neutral assistant. Self-contained and local-first: Next.js (App Router), a file-based SQLite store, and any OpenAI-compatible local LLM, with a deterministic offline mock.",
+      stack: ["Next.js", "TypeScript", "styled-components", "SQLite", "Local LLM"],
+      link: "",
+      inquire: true,
     },
     {
       name: "Zoom Virtual Assistant",
@@ -101,6 +92,15 @@ window.SITE_DATA = {
         { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
       ],
+    },
+    {
+      name: "Phonics",
+      tag: "Reichman miLAB · hardware",
+      blurb:
+        "An interactive tabletop device that helps children learn to read by building words from physical, RFID-tagged letter tokens. A Raspberry Pi reads the tokens (MFRC522 RFID), gives real-time feedback through NeoPixel LEDs, physical buttons and audio, and is driven by a Flask + SQLite backend. Designed, built and user-tested at Reichman University's (IDC) miLAB; the v2 reworked it into a clean Raspberry-Pi API with a persistence layer.",
+      stack: ["Python", "Raspberry Pi", "RFID", "Flask", "SQLite", "NeoPixel"],
+      link: "http://milab.idc.ac.il/teaching/projects/phonics/",
+      inquire: true,
     },
   ],
 
@@ -125,5 +125,56 @@ window.SITE_DATA = {
     { label: "Email", value: "taldanai@icloud.com", href: "mailto:taldanai@icloud.com" },
     { label: "GitHub", value: "github.com/danaital", href: "https://github.com/danaital" },
     { label: "LinkedIn", value: "Tal Danai", href: "https://www.linkedin.com/in/tal-danai/" },
+  ],
+
+  /* -------------------------------------------------------------------------
+     Experience — split into Development and Teaching.
+     NOTE: dates are placeholders ("—"). Claude couldn't read LinkedIn, so the
+     roles/orgs are inferred from your work; please verify and fill the periods.
+     ---------------------------------------------------------------------- */
+  experience: {
+    development: [
+      {
+        role: "Full-Stack Developer",
+        org: "Ofran Worldwide Car Rental",
+        period: "—",
+        points: [
+          "Building the internal Reports platform end-to-end — React + TypeScript (Vite) frontend, NestJS backend, with full English/Hebrew (RTL) support.",
+          "Built an AI-driven report-generation tool that replaced a 253-file database-migration chain.",
+        ],
+      },
+    ],
+    teaching: [
+      {
+        role: "Recitation Instructor — Introduction to Computer Science",
+        org: "Reichman University (IDC Herzliya)",
+        period: "—",
+        points: [
+          "Teach first-year students the fundamentals of programming and computer science in Java.",
+          "Lead weekly recitations, write practice material, and support students through the course.",
+        ],
+      },
+    ],
+  },
+
+  /* Education. Verify degrees/dates. */
+  education: [
+    {
+      degree: "M.Sc., Computer Science",
+      org: "Reichman University (IDC Herzliya)",
+      period: "— · in progress",
+      note: "Coursework includes Machine Learning.",
+    },
+    {
+      degree: "B.Sc., Computer Science",
+      org: "Reichman University (IDC Herzliya)",
+      period: "—",
+      note: "",
+    },
+  ],
+
+  /* Certificates — add items as { name, issuer, year }. Section hides while empty. */
+  certificates: [
+    // { name: "Example Certificate", issuer: "Issuer", year: "2025" },
   ],
 };

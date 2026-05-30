@@ -122,6 +122,59 @@
     });
   }
 
+  /* ---- Experience (development + teaching) ---- */
+  function renderXp(listId, items) {
+    var ul = document.getElementById(listId);
+    if (!ul) return;
+    (items || []).forEach(function (x) {
+      var li = el("li", { class: "xp-item" });
+      var head = el("div", { class: "xp-head" });
+      head.appendChild(el("h4", { text: x.role }));
+      if (x.period) head.appendChild(el("span", { class: "xp-period", text: x.period }));
+      li.appendChild(head);
+      if (x.org) li.appendChild(el("p", { class: "xp-org", text: x.org }));
+      if (x.points && x.points.length) {
+        var pts = el("ul", { class: "xp-points" });
+        x.points.forEach(function (pt) { pts.appendChild(el("li", { text: pt })); });
+        li.appendChild(pts);
+      }
+      ul.appendChild(li);
+    });
+  }
+  if (data.experience) {
+    renderXp("xp-development", data.experience.development);
+    renderXp("xp-teaching", data.experience.teaching);
+  }
+
+  /* ---- Education ---- */
+  var eduList = $("#edu-list");
+  if (eduList) {
+    (data.education || []).forEach(function (e) {
+      var li = el("li", { class: "edu-item" });
+      var head = el("div", { class: "xp-head" });
+      head.appendChild(el("h4", { text: e.degree }));
+      if (e.period) head.appendChild(el("span", { class: "xp-period", text: e.period }));
+      li.appendChild(head);
+      if (e.org) li.appendChild(el("p", { class: "xp-org", text: e.org }));
+      if (e.note) li.appendChild(el("p", { class: "edu-note", text: e.note }));
+      eduList.appendChild(li);
+    });
+  }
+
+  /* ---- Certificates (section hidden while empty) ---- */
+  var certList = $("#cert-list");
+  var certWrap = $("#certs-wrap");
+  if (certList && data.certificates && data.certificates.length) {
+    data.certificates.forEach(function (c) {
+      var li = el("li", { class: "cert-item" });
+      li.appendChild(el("span", { class: "cert-name", text: c.name }));
+      var meta = [c.issuer, c.year].filter(Boolean).join(" · ");
+      if (meta) li.appendChild(el("span", { class: "cert-meta", text: meta }));
+      certList.appendChild(li);
+    });
+    if (certWrap) certWrap.hidden = false;
+  }
+
   /* ---- Mobile nav toggle ---- */
   var toggle = $(".nav-toggle");
   var navLinks = $("#nav-links");
