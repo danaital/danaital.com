@@ -3,6 +3,23 @@
    ========================================================================== */
 
 window.SITE_DATA = {
+  /* -------------------------------------------------------------------------
+     Contact form + phone-notification config.
+     1. web3formsKey: get a FREE key at https://web3forms.com (no account —
+        just enter taldanai@icloud.com and it emails you an access key).
+        Until this is set, the form falls back to opening the visitor's email.
+     2. ntfyTopic: pick a private, hard-to-guess topic name, then subscribe to
+        it in the ntfy app (App Store / Google Play / https://ntfy.sh).
+        On every inquiry the site pushes a notification to that topic.
+        (Also set the same value as the repo `NTFY_TOPIC` Actions secret so the
+        daily GitHub scan can notify you too.)
+     ---------------------------------------------------------------------- */
+  config: {
+    web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY",
+    ntfyTopic: "YOUR_NTFY_TOPIC",
+    contactEmail: "taldanai@icloud.com",
+  },
+
   /* Core technologies shown in the strip under the hero. */
   skills: [
     "TypeScript", "React", "React Native", "Node.js", "NestJS",

@@ -145,6 +145,65 @@
     emailLink.addEventListener("click", function () { showToast("Opening your email app…"); });
   }
 
+  /* ---- Contact form: Web3Forms submit + ntfy phone push (mailto fallback) ---- */
+  var form = $("#contact-form");
+  var cfg = data.config || {};
+  function isSet(v) { return typeof v === "string" && v && v.indexOf("YOUR_") !== 0; }
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(form);
+      if (fd.get("botcheck")) return; // honeypot tripped — silently drop
+      var name = (fd.get("name") || "").toString().trim();
+      var email = (fd.get("email") || "").toString().trim();
+      var message = (fd.get("message") || "").toString().trim();
+      if (!name || !email || !message) { showToast("Please fill in every field."); return; }
+
+      // Fallback while the form backend isn't configured: open the visitor's email.
+      if (!isSet(cfg.web3formsKey)) {
+        var to = cfg.contactEmail || "taldanai@icloud.com";
+        var body = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")");
+        window.location.href = "mailto:" + to +
+          "?subject=" + encodeURIComponent("Inquiry from danaital.com") + "&body=" + body;
+        showToast("Opening your email app…");
+        return;
+      }
+
+      var btn = form.querySelector("button[type=submit]");
+      if (btn) btn.disabled = true;
+      showToast("Sending…");
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: cfg.web3formsKey,
+          subject: "New inquiry from danaital.com",
+          from_name: "danaital.com",
+          name: name, email: email, message: message,
+        }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (json) {
+          if (json && json.success) {
+            if (isSet(cfg.ntfyTopic)) {
+              fetch("https://ntfy.sh/" + cfg.ntfyTopic, {
+                method: "POST",
+                headers: { Title: "New inquiry — danaital.com", Tags: "envelope" },
+                body: name + " (" + email + "): " + message,
+              }).catch(function () {});
+            }
+            form.reset();
+            showToast("Thanks, " + name.split(" ")[0] + "! Your message was sent.", 5000);
+          } else {
+            showToast("Couldn't send — please email me directly.", 5000);
+          }
+        })
+        .catch(function () { showToast("Network error — please email me directly.", 5000); })
+        .then(function () { if (btn) btn.disabled = false; });
+    });
+  }
+
   /* ---- Year ---- */
   var year = $("#year");
   if (year) year.textContent = new Date().getFullYear();
