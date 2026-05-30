@@ -206,6 +206,24 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; color: var(--ink); lin
   .nav-links li { padding: 8px 0; border-bottom: 1px solid var(--line); }
 }
 
+/* ---- Toasts ---- */
+.toast-wrap {
+  position: fixed; bottom: 22px; right: 22px; z-index: 200;
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+}
+.toast {
+  background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 10px;
+  box-shadow: var(--shadow); font-size: .9rem; font-weight: 500; max-width: 320px;
+  cursor: pointer; opacity: 0; transform: translateY(10px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.hide { opacity: 0; transform: translateY(10px); }
+@media (max-width: 520px) {
+  .toast-wrap { left: 16px; right: 16px; bottom: 16px; align-items: stretch; }
+  .toast { max-width: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; transition: none !important; }
 }

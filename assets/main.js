@@ -114,6 +114,37 @@
     });
   }
 
+  /* ---- Toasts: timed, auto-dismissing notifications ---- */
+  function showToast(message, ms) {
+    ms = ms || 3500;
+    var wrap = document.getElementById("toast-wrap");
+    if (!wrap) {
+      wrap = el("div", { id: "toast-wrap", class: "toast-wrap", "aria-live": "polite" });
+      document.body.appendChild(wrap);
+    }
+    var toast = el("div", { class: "toast", role: "status" }, [message]);
+    wrap.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add("show"); });
+    var dismiss = function () {
+      toast.classList.remove("show");
+      toast.classList.add("hide");
+      setTimeout(function () { if (toast.parentNode) toast.remove(); }, 320);
+    };
+    toast.addEventListener("click", dismiss);
+    setTimeout(dismiss, ms);
+  }
+  window.showToast = showToast;
+
+  /* Surface a timed toast when someone acts on a contact/inquiry link. */
+  var inquiry = $(".inquiry");
+  if (inquiry) {
+    inquiry.addEventListener("click", function () { showToast("Opening your email app…"); });
+  }
+  var emailLink = document.querySelector('#contact-links a[href^="mailto:"]');
+  if (emailLink) {
+    emailLink.addEventListener("click", function () { showToast("Opening your email app…"); });
+  }
+
   /* ---- Year ---- */
   var year = $("#year");
   if (year) year.textContent = new Date().getFullYear();
