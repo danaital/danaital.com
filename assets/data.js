@@ -57,6 +57,7 @@ window.SITE_DATA = {
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
       link: "https://github.com/danaital/reports-frontend",
       demo: "", // TODO: live demo URL — button appears once set
+      inquire: true,
       repos: [
         { label: "Frontend · React + Vite", url: "https://github.com/danaital/reports-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
@@ -141,6 +142,14 @@ window.SITE_DATA = {
         points: [
           "Building the internal Reports platform end-to-end — React + TypeScript (Vite) frontend, NestJS backend, with full English/Hebrew (RTL) support.",
           "Built an AI-driven report-generation tool that replaced a 253-file database-migration chain.",
+        ],
+      },
+      {
+        role: "Developer — Phonics (research)",
+        org: "Reichman University · miLAB",
+        period: "2021",
+        points: [
+          "Designed and built Phonics — an interactive RFID + Raspberry-Pi device that helps children learn to read — and ran user testing at the lab.",
         ],
       },
     ],
