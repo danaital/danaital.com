@@ -129,27 +129,45 @@ window.SITE_DATA = {
   ],
 
   /* -------------------------------------------------------------------------
-     Experience — split into Development and Teaching.
-     NOTE: dates are placeholders ("—"). Claude couldn't read LinkedIn, so the
-     roles/orgs are inferred from your work; please verify and fill the periods.
+     Experience — from LinkedIn, split into Development and Teaching.
      ---------------------------------------------------------------------- */
   experience: {
     development: [
       {
-        role: "Full-Stack Developer",
+        role: "Software Developer",
         org: "Ofran Worldwide Car Rental",
-        period: "—",
+        period: "Jan 2025 – Present",
+        meta: "Full-time · On-site · Bnei Brak, Israel",
         points: [
-          "Building the internal Reports platform end-to-end — React + TypeScript (Vite) frontend, NestJS backend, with full English/Hebrew (RTL) support.",
+          "Building the company's internal Reports platform end-to-end — React + TypeScript (Vite) frontend and NestJS backend, with full English/Hebrew (RTL) support.",
           "Built an AI-driven report-generation tool that replaced a 253-file database-migration chain.",
         ],
       },
       {
-        role: "Developer — Phonics (research)",
-        org: "Reichman University · miLAB",
-        period: "2021",
+        role: "Full-Stack Developer",
+        org: "Ryde — Outsmart Mobility",
+        period: "Jul 2023 – Jan 2025",
+        meta: "Full-time · Hybrid · Rishon LeZion, Israel",
         points: [
-          "Designed and built Phonics — an interactive RFID + Raspberry-Pi device that helps children learn to read — and ran user testing at the lab.",
+          "Full-stack development at a mobility company across a broad web stack — Node.js, SQL, and more.",
+        ],
+      },
+      {
+        role: "Software Development Intern",
+        org: "eToro",
+        period: "Nov 2021 – Sep 2022",
+        meta: "Part-time · Bnei Brak, Israel",
+        points: [
+          "Software development internship — backend work with SQL and C#.",
+        ],
+      },
+      {
+        role: "IT Analyst",
+        org: "Ofran Services Ltd.",
+        period: "Aug 2019 – Feb 2020",
+        meta: "Full-time",
+        points: [
+          "Analysed work processes and fine-tuned the company's system.",
         ],
       },
     ],
@@ -157,10 +175,29 @@ window.SITE_DATA = {
       {
         role: "Recitation Instructor — Introduction to Computer Science",
         org: "Reichman University (IDC Herzliya)",
-        period: "—",
+        period: "Oct 2022 – Present",
+        meta: "Part-time",
         points: [
           "Teach first-year students the fundamentals of programming and computer science in Java.",
           "Lead weekly recitations, write practice material, and support students through the course.",
+        ],
+      },
+      {
+        role: "Teaching Assistant",
+        org: "Google × Reichman Tech School",
+        period: "Oct 2022 – Apr 2023",
+        meta: "Part-time · Hybrid · Tel Aviv, Israel",
+        points: [
+          "TA for a Google × Reichman Tech School program — Python, Node.js, and web development.",
+        ],
+      },
+      {
+        role: "Teaching Assistant — Introduction to Computer Science",
+        org: "Reichman University (IDC Herzliya) · RRIS",
+        period: "Oct 2020 – Feb 2021",
+        meta: "Part-time",
+        points: [
+          "TA for Intro to Computer Science at the Raphael Recanati International School (RRIS).",
         ],
       },
     ],

@@ -133,6 +133,7 @@
       if (x.period) head.appendChild(el("span", { class: "xp-period", text: x.period }));
       li.appendChild(head);
       if (x.org) li.appendChild(el("p", { class: "xp-org", text: x.org }));
+      if (x.meta) li.appendChild(el("p", { class: "xp-meta", text: x.meta }));
       if (x.points && x.points.length) {
         var pts = el("ul", { class: "xp-points" });
         x.points.forEach(function (pt) { pts.appendChild(el("li", { text: pt })); });

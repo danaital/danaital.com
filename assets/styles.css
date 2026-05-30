@@ -229,7 +229,8 @@ a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-
   font-size: .74rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap;
   background: var(--white); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px;
 }
-.xp-org { margin: 4px 0 10px; color: var(--accent-ink); font-weight: 600; font-size: .95rem; }
+.xp-org { margin: 4px 0 3px; color: var(--accent-ink); font-weight: 600; font-size: .95rem; }
+.xp-meta { margin: 0 0 10px; color: var(--ink-soft); font-size: .8rem; font-weight: 500; }
 .xp-points { margin: 0; padding-left: 16px; color: var(--ink-soft); font-size: .95rem; }
 .xp-points li { margin-bottom: 6px; }
 
