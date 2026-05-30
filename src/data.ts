@@ -82,6 +82,7 @@
       stack: ["C++", "IoT", "Embedded"],
       link: "https://github.com/danaital/ZoomVirtualAssistant",
     },
+    /* Temporarily removed — re-add later:
     {
       name: "Course Management",
       tag: "Full-stack web app",
@@ -89,13 +90,14 @@
         "A course-management system with a React front end and a NestJS back end — handling courses, enrolment and administration end to end.",
       stack: ["React", "TypeScript", "NestJS"],
       link: "",
-      demo: "", // TODO: live demo URL — button appears once set
+      demo: "",
       showRepos: true,
       repos: [
         { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
       ],
     },
+    */
     {
       name: "Phonics",
       tag: "Reichman miLAB · hardware",
