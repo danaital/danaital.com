@@ -1,29 +1,44 @@
 # danaital.com — Tal Danai's personal site
 
-A static, zero-build personal website (HTML + CSS + a little vanilla JS),
+A personal website written in **TypeScript**, compiled to static JS and
 deployed to **GitHub Pages** at <https://danaital.com>.
+
+## Stack & structure
+
+- `index.html` + `assets/styles.css` — markup and styles.
+- **`src/data.ts`** — all site content (projects, skills, experience, education,
+  certificates, writing/LinkedIn posts, contact, config).
+- **`src/main.ts`** — rendering + interactions (toasts, contact form, etc.).
+- `tsc` compiles `src/*.ts` → `assets/*.js` (config in `tsconfig.json`).
 
 ## Editing content
 
-All content lives in **[`assets/data.js`](assets/data.js)** — projects, skills,
-writing/LinkedIn posts, and contact links. Edit that file, commit, and push;
-GitHub Pages redeploys automatically. No build step.
+Edit **[`src/data.ts`](src/data.ts)**, then build, commit, and push — CI rebuilds
+and GitHub Pages redeploys automatically.
 
-- **Projects** — add/remove entries in the `projects` array. Omit `link` for
-  private repos (the card renders a "Private repository" label instead).
-- **Writing** — add LinkedIn posts to the `posts` array. While it's empty, the
-  section shows a "Read my posts on LinkedIn" call-to-action.
-- **Contact** — edit the `contacts` array.
+```bash
+npm install        # once
+npm run build      # compile src/*.ts -> assets/*.js   (npm run watch for live)
+```
+
+- **Projects** — entries in the `projects` array. Omit `link` (or `""`) for a
+  "Private repository" label. Set `showRepos: true` to list multiple repos.
+  `inquire: true` adds an "Inquire about this" link; `demo` adds a "Live demo" link.
+- **Experience** — `experience.development` / `experience.teaching` arrays.
+- **Education / Certificates** — `education` / `certificates` arrays.
+- **Writing** — `posts` array (empty → LinkedIn call-to-action).
+- **Contact / form** — `contacts` array and `config` (Web3Forms key, ntfy topic).
 
 ## Local preview
 
 ```bash
-python3 -m http.server 8080
-# open http://localhost:8080
+npm run build
+node .claude/server.js     # serves on http://localhost:8123
 ```
 
 ## Deployment
 
-Hosted on GitHub Pages from this repo. The `CNAME` file pins the custom domain
-`danaital.com`. DNS is configured at GoDaddy (A records to GitHub Pages IPs +
-a `www` CNAME). See repo Settings → Pages.
+GitHub Actions ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml))
+runs `npm ci && npm run build` then publishes to GitHub Pages on every push to
+`master`. The `CNAME` file pins `danaital.com`; point the domain there via DNS
+(A records to GitHub Pages IPs + a `www` CNAME).

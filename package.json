@@ -1,0 +1,13 @@
+{
+  "name": "danaital-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tal Danai's personal website — TypeScript compiled to static JS for GitHub Pages.",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3"
+  }
+}

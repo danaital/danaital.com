@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["DOM", "DOM.Iterable", "ES2017"],
+    "rootDir": "src",
+    "outDir": "assets",
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "removeComments": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"]
+}
