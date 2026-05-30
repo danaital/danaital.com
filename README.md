@@ -31,27 +31,9 @@ npm run build      # compile src/*.ts -> assets/*.js   (npm run watch for live)
 
 ## LinkedIn posts (Writing section)
 
-The Writing section renders from **`assets/posts.json`** (fetched at runtime), so
-posts update without a rebuild. It's filled automatically by a nightly job
-([`.github/workflows/linkedin-sync.yml`](.github/workflows/linkedin-sync.yml)) that
-runs [`scripts/fetch-linkedin.mjs`](scripts/fetch-linkedin.mjs) → scrapes the
-owner's own public LinkedIn posts via a third-party API (Apify) → writes
-`posts.json` → commits (which redeploys).
-
-**One-time setup** — add repo secrets (Settings → Secrets and variables → Actions):
-- `APIFY_TOKEN` — your Apify API token.
-- `LINKEDIN_PROFILE_URL` — e.g. `https://www.linkedin.com/in/tal-danai/`.
-- `APIFY_ACTOR` *(optional)* — the LinkedIn-profile-posts actor id you chose
-  (default `apimaestro~linkedin-profile-posts`; verify/adjust per your actor).
-- `NTFY_TOPIC` *(optional)* — phone ping after a sync.
-
-You can also just hand-edit `assets/posts.json` (array of
-`{ title, excerpt, date, link }`). Without the secrets the job no-ops and the
-section shows a "Read my posts on LinkedIn" call-to-action.
-
-> ⚠️ Note: scraping LinkedIn is against LinkedIn's ToS — used here, by choice, only
-> for the owner's own public posts via a service API key (never a LinkedIn login).
-> Proxycurl/Nubela is a drop-in alternative provider if preferred.
+The Writing section shows a "Read my posts on LinkedIn" call-to-action while
+`posts` in `src/data.ts` is empty. To feature specific posts, add entries to
+the `posts` array — each `{ title, excerpt, date, link }`.
 
 ## Local preview
 

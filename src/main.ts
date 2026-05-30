@@ -100,24 +100,22 @@
     });
   }
 
-  /* ---- Writing ---- (posts from assets/posts.json, synced nightly from LinkedIn) ---- */
+  /* ---- Writing ---- */
   var writing = $("#writing-list");
   if (writing) {
-    var renderWriting = function (posts: any[]) {
-      writing.innerHTML = "";
-      if (!posts || posts.length === 0) {
-        writing.appendChild(el("div", { class: "writing-empty" }, [
-          el("p", { text: "I share notes and project updates on LinkedIn." }),
-          el("a", {
-            class: "btn btn-primary", href: data.linkedinUrl || "#",
-            target: "_blank", rel: "noopener",
-          }, ["Read my posts on LinkedIn →"]),
-        ]));
-        return;
-      }
+    var posts = data.posts || [];
+    if (posts.length === 0) {
+      writing.appendChild(el("div", { class: "writing-empty" }, [
+        el("p", { text: "I share notes and project updates on LinkedIn." }),
+        el("a", {
+          class: "btn btn-primary", href: data.linkedinUrl || "#",
+          target: "_blank", rel: "noopener",
+        }, ["Read my posts on LinkedIn →"]),
+      ]));
+    } else {
       posts.forEach(function (post: any) {
         var item = el("a", {
-          class: "writing-card", href: post.link || data.linkedinUrl || "#",
+          class: "writing-card", href: post.link || "#",
           target: "_blank", rel: "noopener",
         });
         if (post.date) item.appendChild(el("time", { datetime: post.date, text: formatDate(post.date) }));
@@ -126,12 +124,7 @@
         item.appendChild(el("span", { class: "writing-more", text: "Read on LinkedIn →" }));
         writing.appendChild(item);
       });
-    };
-    // Prefer the synced posts.json; fall back to data.posts, then the CTA.
-    fetch("assets/posts.json", { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) { renderWriting(Array.isArray(json) && json.length ? json : (data.posts || [])); })
-      .catch(function () { renderWriting(data.posts || []); });
+    }
   }
 
   /* ---- Contact ---- */
