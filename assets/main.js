@@ -70,6 +70,11 @@
       } else {
         footer.appendChild(el("span", { class: "project-private", text: "Private repository" }));
       }
+      if (p.demo) {
+        footer.appendChild(el("a", {
+          class: "project-demo", href: p.demo, target: "_blank", rel: "noopener",
+        }, ["Live demo →"]));
+      }
       if (p.inquire) {
         footer.appendChild(el("a", {
           class: "project-inquire", href: "#contact", "data-project": p.name,

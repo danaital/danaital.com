@@ -169,6 +169,8 @@ a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-
 .project-private { font-size: .85rem; color: var(--ink-soft); font-style: italic; }
 .project-inquire { font-weight: 600; font-size: .92rem; color: var(--accent-ink); }
 .project-inquire:hover { text-decoration: underline; }
+.project-demo { font-weight: 600; font-size: .92rem; color: var(--navy); }
+.project-demo:hover { text-decoration: underline; color: var(--accent-ink); }
 
 /* ---- Writing ---- */
 .writing-list { display: grid; gap: 18px; }

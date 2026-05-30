@@ -39,6 +39,7 @@ window.SITE_DATA = {
       stack: ["React", "React Native", "Expo", "NestJS", "Prisma", "Postgres", "FastAPI", "Python", "Whisper"],
       link: "",
       tagClass: "tag-accent",
+      demo: "", // TODO: live demo URL — button appears once set
       inquire: true,
       repos: [
         { label: "Web · React + Vite", url: "" },
@@ -73,6 +74,7 @@ window.SITE_DATA = {
         "A production React + TypeScript frontend for Ofran Worldwide Car Rental's internal reports platform. Built with Vite and styled-components, with full English/Hebrew (RTL) support, responsive layouts, and a typed, well-tested architecture (Vitest, Playwright, Nx). The repos here use synthetic sample data — no real client or rate data.",
       stack: ["React", "TypeScript", "Vite", "styled-components", "i18n / RTL"],
       link: "https://github.com/danaital/reports-frontend",
+      demo: "", // TODO: live demo URL — button appears once set
       repos: [
         { label: "Frontend · React + Vite", url: "https://github.com/danaital/reports-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
@@ -93,6 +95,7 @@ window.SITE_DATA = {
         "A course-management system with a React front end and a NestJS back end — handling courses, enrolment and administration end to end.",
       stack: ["React", "TypeScript", "NestJS"],
       link: "https://github.com/danaital/course-management-frontend",
+      demo: "", // TODO: live demo URL — button appears once set
       repos: [
         { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
         { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
