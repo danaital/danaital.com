@@ -4,7 +4,8 @@
   "private": true,
   "description": "Tal Danai's personal website — TypeScript compiled to static JS for GitHub Pages.",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/build-css.mjs",
+    "build:css": "node scripts/build-css.mjs",
     "watch": "tsc -w",
     "minify": "esbuild _site/assets/data.js _site/assets/main.js _site/assets/theme-init.js --minify --outdir=_site/assets --allow-overwrite && esbuild _site/assets/styles.css --minify --outfile=_site/assets/styles.css --allow-overwrite"
   },

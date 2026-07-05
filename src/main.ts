@@ -55,6 +55,17 @@
     return document.querySelector<E>(selector);
   }
 
+  /**
+   * Colocated component styles. `css` is a build-time marker, NOT a runtime
+   * styling mechanism: at runtime it just returns the CSS string (and nothing
+   * reads it), so it costs nothing and injects no <style> tags. At BUILD time,
+   * scripts/build-css.mjs scans this file for css`` blocks and splices them into
+   * assets/styles.css at the @@COMPONENTS@@ marker. Author a component's styles
+   * in the css`` next to its render function; run `npm run build` to compile.
+   */
+  const css = (strings: TemplateStringsArray, ...values: unknown[]): string =>
+    strings.reduce((out, s, i) => out + s + (i < values.length ? String(values[i]) : ""), "");
+
   /** Append rendered items to the container with `id`, if it exists. No-op otherwise.
    *  Builds off-DOM via a DocumentFragment so a list triggers one reflow, not one per item. */
   function renderInto<T>(id: string, items: T[] | undefined, render: (item: T) => Node): void {
@@ -123,6 +134,48 @@
   /* ---------------------------------------------------------------------------
      Projects
      ------------------------------------------------------------------------ */
+  css`
+/* ---- Projects ---- */
+.projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.project-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 28px; display: flex; flex-direction: column; box-shadow: var(--shadow);
+  transition: .2s ease;
+}
+.project-card:hover { transform: translateY(-3px); border-color: #d9d3c4; }
+.project-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.project-head h3 { font-size: 1.5rem; margin: 0; }
+.project-tag {
+  font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-soft); background: var(--paper-2); padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+}
+.project-tag.tag-accent { color: #fff; background: var(--accent); }
+.project-blurb { color: var(--ink-soft); font-size: .98rem; margin: 0 0 18px; flex: 1; }
+.stack { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; margin: 0 0 20px; padding: 0; }
+.stack li { font-size: .78rem; color: var(--accent-ink); background: rgba(154,107,47,.08); padding: 3px 10px; border-radius: 6px; font-weight: 500; }
+/* Multi-repo preview */
+.repos { margin: 0 0 18px; }
+.repos-label {
+  display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--ink-soft); font-weight: 600; margin-bottom: 8px;
+}
+.repo-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 7px; }
+.repo-chip {
+  display: inline-block; font-size: .78rem; padding: 4px 11px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
+a.repo-chip { transition: .15s ease; }
+a.repo-chip:hover { border-color: var(--accent); color: var(--accent-ink); text-decoration: none; }
+.repo-chip-private { color: var(--ink-soft); font-style: italic; opacity: .9; }
+
+.project-foot { margin-top: auto; display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap; }
+.project-link { font-weight: 600; font-size: .92rem; }
+.project-private { font-size: .85rem; color: var(--ink-soft); font-style: italic; }
+.project-inquire { font-weight: 600; font-size: .92rem; color: var(--accent-ink); }
+.project-inquire:hover { text-decoration: underline; }
+.project-demo { font-weight: 600; font-size: .92rem; color: var(--navy); }
+.project-demo:hover { text-decoration: underline; color: var(--accent-ink); }
+`;
   function renderProject(p: Project): HTMLElement {
     const card = el("article", { class: "project-card" });
 
@@ -199,6 +252,20 @@
   /* ---------------------------------------------------------------------------
      Writing (hidden entirely while there are no posts)
      ------------------------------------------------------------------------ */
+  css`
+/* ---- Writing ---- */
+.writing-list { display: grid; gap: 18px; }
+.writing-card {
+  display: block; background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 24px 26px; color: var(--ink); box-shadow: var(--shadow);
+  transition: .2s ease;
+}
+.writing-card:hover { transform: translateY(-2px); text-decoration: none; border-color: #d9d3c4; }
+.writing-card time { font-size: .8rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.writing-card h3 { font-size: 1.35rem; margin: 6px 0 8px; }
+.writing-card p { color: var(--ink-soft); margin: 0 0 12px; }
+.writing-more { font-weight: 600; color: var(--accent-ink); font-size: .9rem; }
+`;
   function formatDate(iso: string): string {
     try {
       return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
@@ -232,6 +299,35 @@
   /* ---------------------------------------------------------------------------
      Contact links
      ------------------------------------------------------------------------ */
+  css`
+/* ---- Contact ---- */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 44px; align-items: start; }
+.contact-intro { padding-top: 4px; }
+.contact-lede { font-size: 1.12rem; color: var(--ink-soft); margin: 0 0 26px; max-width: 44ch; }
+
+.contact-methods { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.contact-methods a {
+  display: flex; align-items: center; gap: 15px; background: var(--white);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px;
+  color: var(--ink); box-shadow: var(--shadow); transition: .2s ease;
+}
+.contact-methods a:hover { transform: translateY(-2px); border-color: var(--accent); text-decoration: none; }
+.contact-method-icon {
+  flex: 0 0 auto; width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center;
+  background: rgba(154,107,47,.10); color: var(--accent-ink);
+}
+.contact-method-icon svg { width: 21px; height: 21px; }
+.contact-method-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.contact-method-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); font-weight: 600; }
+.contact-method-value { font-size: 1.02rem; font-weight: 500; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact-method-arrow { margin-left: auto; flex: 0 0 auto; color: var(--ink-soft); display: grid; transition: .2s ease; }
+.contact-method-arrow svg { width: 18px; height: 18px; }
+.contact-methods a:hover .contact-method-arrow { color: var(--accent-ink); transform: translateX(3px); }
+
+@media (max-width: 860px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+`;
   renderInto("contact-links", data.contacts, (c) => {
     const key = (c.label || "").toLowerCase();
     const isMail = c.href.indexOf("mailto:") === 0;
@@ -252,6 +348,69 @@
   /* ---------------------------------------------------------------------------
      Experience (development + teaching)
      ------------------------------------------------------------------------ */
+  css`
+/* ---- Experience & Education ---- */
+.xp-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 0; row-gap: 44px; }
+.xp-col { padding: 0 44px; }
+.xp-col:first-child { padding-left: 0; border-right: 1px solid var(--line); }
+.xp-col:last-child { padding-right: 0; }
+.xp-col-title {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .14em;
+  color: var(--accent); font-weight: 600; margin: 0 0 26px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.xp-list, .edu-list { list-style: none; margin: 0; padding: 0; }
+
+/* Timeline for experience entries */
+.xp-item { position: relative; padding: 0 0 28px 28px; }
+.xp-item::before {
+  content: ""; position: absolute; left: 0; top: 6px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--paper-2);
+  z-index: 1;
+}
+.xp-item::after {
+  content: ""; position: absolute; left: 5px; top: 20px; bottom: -2px; width: 2px; background: var(--line);
+}
+.xp-item:last-child { padding-bottom: 0; }
+.xp-item:last-child::after { display: none; }
+
+.xp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.xp-head h4 {
+  font-family: var(--serif); font-weight: 500; font-size: 1.18rem; margin: 0;
+  color: var(--ink); line-height: 1.3; flex: 1 1 auto; min-width: 0;
+}
+.xp-period {
+  font-size: .74rem; color: var(--ink-soft); font-weight: 600; white-space: nowrap;
+  background: var(--white); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px;
+  flex: 0 0 auto; margin-top: 4px;
+}
+.xp-org { margin: 4px 0 3px; color: var(--accent-ink); font-weight: 600; font-size: .95rem; }
+.xp-meta { margin: 0 0 10px; color: var(--ink-soft); font-size: .8rem; font-weight: 500; }
+.xp-points { margin: 0; padding-left: 16px; color: var(--ink-soft); font-size: .95rem; }
+.xp-points li { margin-bottom: 6px; }
+
+/* Education — simple cards (no timeline) */
+.edu-list { display: grid; gap: 18px; }
+.edu-item {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px 24px; box-shadow: var(--shadow);
+}
+.edu-note { margin: 6px 0 0; color: var(--ink-soft); font-size: .92rem; }
+.certs { margin-top: 44px; }
+.cert-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.cert-item {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap; background: var(--white); border: 1px solid var(--line);
+  border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow);
+}
+.cert-name { font-weight: 600; color: var(--ink); }
+.cert-meta { font-size: .85rem; color: var(--ink-soft); }
+@media (max-width: 920px) {
+  .xp-grid { grid-template-columns: 1fr; row-gap: 40px; }
+  .xp-col { padding: 0; }
+  .xp-col:first-child { border-right: 0; padding-bottom: 8px; }
+}
+`;
   function renderXpItem(x: ExperienceItem): HTMLElement {
     const li = el("li", { class: "xp-item" });
     const head = el("div", { class: "xp-head" });
@@ -403,6 +562,45 @@
   /* ---------------------------------------------------------------------------
      Contact form: Web3Forms submit + ntfy phone push (mailto fallback)
      ------------------------------------------------------------------------ */
+  css`
+/* ---- Contact form ---- */
+.contact-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 30px 30px 28px;
+}
+.form-title { font-size: 1.4rem; margin: 0 0 20px; }
+.form-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field.has-error input,
+.field.has-error textarea {
+  border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192, 57, 43, .12);
+}
+.field-err { color: #c0392b; font-size: .8rem; margin-top: 1px; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field-full { grid-column: 1 / -1; }
+.contact-form label {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--accent); font-weight: 600;
+}
+.contact-form input,
+.contact-form textarea {
+  font-family: var(--sans); font-size: 1rem; color: var(--ink); width: 100%;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; transition: border-color .15s ease, box-shadow .15s ease;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none; border-color: var(--accent); background: var(--white);
+  box-shadow: 0 0 0 3px rgba(154,107,47,.12);
+}
+.contact-form textarea { resize: vertical; min-height: 124px; }
+.contact-form .btn { cursor: pointer; }
+.btn-block { display: block; width: 100%; text-align: center; }
+.contact-form button[disabled] { opacity: .6; cursor: progress; }
+.form-note { margin: 14px 0 0; text-align: center; font-size: .86rem; color: var(--ink-soft); }
+@media (max-width: 480px) {
+  .form-fields { grid-template-columns: 1fr; }
+}
+`;
   const cfg = data.config;
   const isSet = (v: string | undefined): v is string => typeof v === "string" && v.length > 0 && v.indexOf("YOUR_") !== 0;
 

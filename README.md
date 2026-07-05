@@ -5,12 +5,20 @@ deployed to **GitHub Pages** at <https://danaital.com>.
 
 ## Stack & structure
 
-- `index.html` + `assets/styles.css` — markup and styles.
+- `index.html` — markup; `assets/styles.css` — the compiled stylesheet (**generated**, see below).
 - **`src/data.ts`** — all site content (projects, skills, experience, education,
   certificates, writing/LinkedIn posts, contact, config).
 - **`src/main.ts`** — rendering + interactions (theme toggle, scrollspy,
-  scroll-reveal, toasts, contact form, etc.).
-- `tsc` compiles `src/*.ts` → `assets/*.js` (config in `tsconfig.json`).
+  scroll-reveal, toasts, contact form, etc.). Each component's block styles live
+  right beside its render function in a ``css`…` `` tagged template.
+- **`src/styles/base.css`** — the global style layer (design tokens, dark theme,
+  header/nav/hero/sections, responsive, toasts) with a `@@COMPONENTS@@` marker.
+- `tsc` compiles `src/*.ts` → `assets/*.js` (config in `tsconfig.json`), then
+  **`scripts/build-css.mjs`** extracts the ``css`…` `` blocks from `src/main.ts`
+  and splices them into `base.css` at the marker to produce `assets/styles.css`.
+  This gives styled-components-style colocation with **no framework, no bundler
+  and zero runtime cost** — `assets/styles.css` is a plain static stylesheet.
+  Don't edit `assets/styles.css` by hand; edit `base.css` or the ``css`…` `` block.
 - `assets/og.png` — social share image (1200×630); `robots.txt` + `sitemap.xml`
   and the JSON-LD/Open Graph tags in `index.html` cover SEO and link previews.
 
@@ -34,7 +42,8 @@ and GitHub Pages redeploys automatically.
 
 ```bash
 npm install        # once
-npm run build      # compile src/*.ts -> assets/*.js   (npm run watch for live)
+npm run build      # tsc (src/*.ts -> assets/*.js) + assemble assets/styles.css
+                   # npm run watch for live TS; npm run build:css to reassemble CSS only
 ```
 
 - **Projects** — entries in the `projects` array. Omit `link` (or `""`) for a
