@@ -1,3 +1,4 @@
+"use strict";
 /* =============================================================================
    Site content — edit this file, then `npm run build` to compile to assets/.
    ========================================================================== */
@@ -55,9 +56,9 @@ window.SITE_DATA = {
             demo: "", // TODO: live demo URL — button appears once set
             inquire: true,
             repos: [
-                { label: "Frontend · React + Vite", url: "https://github.com/danaital/reports-frontend" },
-                { label: "Backend · NestJS", url: "https://github.com/danaital/reports-backend" },
-                { label: "AI Ops · report generator", url: "https://github.com/danaital/reports-ai-ops" },
+                { label: "Frontend · React + Vite", url: "" },
+                { label: "Backend · NestJS", url: "" },
+                { label: "AI Ops · report generator", url: "" },
             ],
         },
         {
@@ -74,23 +75,8 @@ window.SITE_DATA = {
             blurb: "An embedded virtual assistant integrating with Zoom, written in C++ — the capstone of an IoT course. Bridges hardware sensing with a real-time meeting workflow.",
             stack: ["C++", "IoT", "Embedded"],
             link: "https://github.com/danaital/ZoomVirtualAssistant",
+            demo: "https://www.instructables.com/Zoom-Virtual-Assistance/"
         },
-        /* Temporarily removed — re-add later:
-        {
-          name: "Course Management",
-          tag: "Full-stack web app",
-          blurb:
-            "A course-management system with a React front end and a NestJS back end — handling courses, enrolment and administration end to end.",
-          stack: ["React", "TypeScript", "NestJS"],
-          link: "",
-          demo: "",
-          showRepos: true,
-          repos: [
-            { label: "Frontend · React", url: "https://github.com/danaital/course-management-frontend" },
-            { label: "Backend · NestJS", url: "https://github.com/danaital/course-management-backend" },
-          ],
-        },
-        */
         {
             name: "Phonics",
             tag: "Reichman miLAB · hardware",
@@ -104,7 +90,8 @@ window.SITE_DATA = {
             tag: "TypeScript · open source",
             blurb: "The site you're looking at — a TypeScript codebase compiled to static HTML/CSS/JS with no framework. Data-driven project/experience cards, timed toast notifications, a working contact form (Web3Forms + ntfy phone push), and a daily GitHub Actions job that surfaces new repos and audits repository privacy. Built and shipped to GitHub Pages through a CI pipeline.",
             stack: ["TypeScript", "HTML", "CSS"],
-            link: "https://github.com/danaital/danaital.com",
+            link: "",
+            demo: "https://www.runi.ac.il/en/research-institutes/communication/milab/ba/phonics",
         },
     ],
     /* -------------------------------------------------------------------------

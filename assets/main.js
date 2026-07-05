@@ -1,391 +1,440 @@
-/* Render site content from window.SITE_DATA and wire up small interactions. */
+"use strict";
+/* =============================================================================
+   Render site content from window.SITE_DATA and wire up small interactions.
+   Compiled by `tsc` to assets/main.js and loaded as a plain (non-module)
+   script after assets/data.js, so everything stays inside one IIFE and reads
+   the SITE_DATA global.
+   ========================================================================== */
 (function () {
     "use strict";
-    var data = window.SITE_DATA || {};
-    var $ = function (sel) { return document.querySelector(sel); };
+    var _a, _b, _c;
+    const data = window.SITE_DATA;
+    if (!data)
+        return;
     function el(tag, attrs, children) {
-        var node = document.createElement(tag);
-        attrs = attrs || {};
-        Object.keys(attrs).forEach(function (k) {
-            if (k === "class")
-                node.className = attrs[k];
-            else if (k === "html")
-                node.innerHTML = attrs[k];
-            else if (k === "text")
-                node.textContent = attrs[k];
-            else
-                node.setAttribute(k, attrs[k]);
-        });
-        (children || []).forEach(function (c) {
-            node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-        });
+        const node = document.createElement(tag);
+        if (attrs) {
+            for (const key of Object.keys(attrs)) {
+                const value = attrs[key];
+                if (value == null)
+                    continue;
+                if (key === "class")
+                    node.className = value;
+                else if (key === "html")
+                    node.innerHTML = value;
+                else if (key === "text")
+                    node.textContent = value;
+                else
+                    node.setAttribute(key, value);
+            }
+        }
+        if (children) {
+            for (const child of children) {
+                node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+            }
+        }
         return node;
     }
-    /* ---- Skills strip ---- */
-    var skillsList = $("#skills-list");
-    if (skillsList) {
-        (data.skills || []).forEach(function (s) {
-            skillsList.appendChild(el("li", { text: s }));
+    /** querySelector with a typed result. */
+    function qs(selector) {
+        return document.querySelector(selector);
+    }
+    /** Append rendered items to the container with `id`, if it exists. No-op otherwise.
+     *  Builds off-DOM via a DocumentFragment so a list triggers one reflow, not one per item. */
+    function renderInto(id, items, render) {
+        const host = document.getElementById(id);
+        if (!host || !items || !items.length)
+            return;
+        const frag = document.createDocumentFragment();
+        items.forEach((item) => frag.appendChild(render(item)));
+        host.appendChild(frag);
+    }
+    /* ---------------------------------------------------------------------------
+       Inline SVG icons (author-controlled markup — safe for innerHTML)
+       ------------------------------------------------------------------------ */
+    const svg = (paths) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + "</svg>";
+    const contactIcons = {
+        email: svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>'),
+        github: svg('<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>'),
+        linkedin: svg('<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>'),
+    };
+    const linkIcon = svg('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>');
+    const arrowIcon = svg('<path d="M7 17 17 7M7 7h10v10"/>');
+    /* ---------------------------------------------------------------------------
+       Toasts: timed, auto-dismissing notifications
+       ------------------------------------------------------------------------ */
+    function showToast(message, ms = 3500) {
+        let wrap = document.getElementById("toast-wrap");
+        if (!wrap) {
+            wrap = el("div", { id: "toast-wrap", class: "toast-wrap", "aria-live": "polite" });
+            document.body.appendChild(wrap);
+        }
+        const toast = el("div", { class: "toast", role: "status" }, [message]);
+        wrap.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add("show"));
+        const dismiss = () => {
+            toast.classList.remove("show");
+            toast.classList.add("hide");
+            setTimeout(() => toast.remove(), 320);
+        };
+        toast.addEventListener("click", dismiss);
+        setTimeout(dismiss, ms);
+    }
+    window.showToast = showToast;
+    /* ---------------------------------------------------------------------------
+       Portrait fallback: swap to the initials monogram if the image 404s.
+       (Moved here from an inline `onerror=""` attribute so a strict
+       Content-Security-Policy — no `script-src 'unsafe-inline'` — still allows it.)
+       ------------------------------------------------------------------------ */
+    const portraitImg = qs("#portrait-img");
+    if (portraitImg) {
+        portraitImg.addEventListener("error", () => {
+            var _a;
+            portraitImg.classList.add("js-hidden");
+            (_a = document.getElementById("mono-fallback")) === null || _a === void 0 ? void 0 : _a.classList.remove("js-hidden");
         });
     }
-    /* ---- Projects ---- */
-    var grid = $("#projects-grid");
+    /* ---------------------------------------------------------------------------
+       Skills strip
+       ------------------------------------------------------------------------ */
+    renderInto("skills-list", data.skills, (skill) => el("li", { text: skill }));
+    /* ---------------------------------------------------------------------------
+       Projects
+       ------------------------------------------------------------------------ */
+    function renderProject(p) {
+        const card = el("article", { class: "project-card" });
+        const head = el("div", { class: "project-head" });
+        head.appendChild(el("h3", { text: p.name }));
+        if (p.tag) {
+            head.appendChild(el("span", { class: ("project-tag " + (p.tagClass || "")).trim(), text: p.tag }));
+        }
+        card.appendChild(head);
+        card.appendChild(el("p", { class: "project-blurb", text: p.blurb }));
+        const stack = el("ul", { class: "stack" });
+        (p.stack || []).forEach((t) => stack.appendChild(el("li", { text: t })));
+        card.appendChild(stack);
+        // Optional multi-repo links — opt-in per project via showRepos.
+        if (p.showRepos && p.repos && p.repos.length) {
+            const reposWrap = el("div", { class: "repos" });
+            reposWrap.appendChild(el("span", { class: "repos-label", text: "Repositories" }));
+            const repoList = el("ul", { class: "repo-chips" });
+            p.repos.forEach((rp) => {
+                const li = el("li");
+                li.appendChild(rp.url
+                    ? el("a", { class: "repo-chip", href: rp.url, target: "_blank", rel: "noopener noreferrer" }, [rp.label])
+                    : el("span", { class: "repo-chip repo-chip-private", title: "Private", text: rp.label }));
+                repoList.appendChild(li);
+            });
+            reposWrap.appendChild(repoList);
+            card.appendChild(reposWrap);
+        }
+        const footer = el("div", { class: "project-foot" });
+        if (p.link) {
+            const label = p.link.indexOf("github.com") > -1 ? "View on GitHub →" : "View project →";
+            footer.appendChild(el("a", { class: "project-link", href: p.link, target: "_blank", rel: "noopener noreferrer" }, [label]));
+        }
+        else if (!p.showRepos) {
+            footer.appendChild(el("span", { class: "project-private", text: "Private repository" }));
+        }
+        if (p.demo) {
+            footer.appendChild(el("a", { class: "project-demo", href: p.demo, target: "_blank", rel: "noopener noreferrer" }, ["Live demo →"]));
+        }
+        if (p.inquire) {
+            footer.appendChild(el("a", { class: "project-inquire", href: "#contact", "data-project": p.name }, ["Inquire about this →"]));
+        }
+        card.appendChild(footer);
+        return card;
+    }
+    const grid = qs("#projects-grid");
     if (grid) {
-        (data.projects || []).forEach(function (p) {
-            var card = el("article", { class: "project-card" });
-            var head = el("div", { class: "project-head" });
-            head.appendChild(el("h3", { text: p.name }));
-            if (p.tag)
-                head.appendChild(el("span", { class: "project-tag " + (p.tagClass || ""), text: p.tag }));
-            card.appendChild(head);
-            card.appendChild(el("p", { class: "project-blurb", text: p.blurb }));
-            var stack = el("ul", { class: "stack" });
-            (p.stack || []).forEach(function (t) { stack.appendChild(el("li", { text: t })); });
-            card.appendChild(stack);
-            // Optional multi-repo links — opt-in per project via showRepos.
-            if (p.showRepos && p.repos && p.repos.length) {
-                var reposWrap = el("div", { class: "repos" });
-                reposWrap.appendChild(el("span", { class: "repos-label", text: "Repositories" }));
-                var repoList = el("ul", { class: "repo-chips" });
-                p.repos.forEach(function (rp) {
-                    var li = el("li");
-                    if (rp.url) {
-                        li.appendChild(el("a", { class: "repo-chip", href: rp.url, target: "_blank", rel: "noopener" }, [rp.label]));
-                    }
-                    else {
-                        li.appendChild(el("span", { class: "repo-chip repo-chip-private", title: "Private", text: rp.label }));
-                    }
-                    repoList.appendChild(li);
-                });
-                reposWrap.appendChild(repoList);
-                card.appendChild(reposWrap);
-            }
-            var footer = el("div", { class: "project-foot" });
-            if (p.link) {
-                footer.appendChild(el("a", {
-                    class: "project-link", href: p.link, target: "_blank", rel: "noopener",
-                }, [p.link.indexOf("github.com") > -1 ? "View on GitHub →" : "View project →"]));
-            }
-            else if (!p.showRepos) {
-                footer.appendChild(el("span", { class: "project-private", text: "Private repository" }));
-            }
-            if (p.demo) {
-                footer.appendChild(el("a", {
-                    class: "project-demo", href: p.demo, target: "_blank", rel: "noopener",
-                }, ["Live demo →"]));
-            }
-            if (p.inquire) {
-                footer.appendChild(el("a", {
-                    class: "project-inquire", href: "#contact", "data-project": p.name,
-                }, ["Inquire about this →"]));
-            }
-            card.appendChild(footer);
-            grid.appendChild(card);
-        });
+        const projectsFrag = document.createDocumentFragment();
+        (data.projects || []).forEach((p) => projectsFrag.appendChild(renderProject(p)));
+        grid.appendChild(projectsFrag);
         // Per-project inquiry: prefill the contact form with the project and jump to it.
-        grid.addEventListener("click", function (e) {
-            var a = e.target.closest && e.target.closest(".project-inquire");
-            if (!a)
+        grid.addEventListener("click", (e) => {
+            var _a, _b;
+            const target = e.target;
+            const link = (_a = target === null || target === void 0 ? void 0 : target.closest) === null || _a === void 0 ? void 0 : _a.call(target, ".project-inquire");
+            if (!link)
                 return;
             e.preventDefault();
-            var proj = a.getAttribute("data-project") || "your work";
-            var msg = document.getElementById("cf-msg");
+            const proj = link.getAttribute("data-project") || "your work";
+            const msg = document.getElementById("cf-msg");
             if (msg)
                 msg.value = 'Hi Tal, I\'d love to talk to you about "' + proj + '". ';
-            var contact = document.getElementById("contact");
-            if (contact)
-                contact.scrollIntoView({ behavior: "smooth" });
-            setTimeout(function () { if (msg)
-                msg.focus(); }, 450);
+            (_b = document.getElementById("contact")) === null || _b === void 0 ? void 0 : _b.scrollIntoView({ behavior: "smooth" });
+            setTimeout(() => msg === null || msg === void 0 ? void 0 : msg.focus(), 450);
             showToast("Ask away about " + proj + " ↓");
         });
     }
-    /* ---- Writing (hidden entirely while there are no posts) ---- */
-    var writing = $("#writing-list");
+    /* ---------------------------------------------------------------------------
+       Writing (hidden entirely while there are no posts)
+       ------------------------------------------------------------------------ */
+    function formatDate(iso) {
+        try {
+            return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        }
+        catch (_a) {
+            return iso;
+        }
+    }
+    const writing = qs("#writing-list");
     if (writing) {
-        var posts = data.posts || [];
-        var writingSection = document.getElementById("writing");
-        var writingNav = document.querySelector('#nav-links a[href="#writing"]');
-        if (posts.length === 0) {
-            if (writingSection)
-                writingSection.hidden = true;
-            if (writingNav && writingNav.parentElement)
-                writingNav.parentElement.hidden = true;
-        }
-        else {
-            if (writingSection)
-                writingSection.hidden = false;
-            posts.forEach(function (post) {
-                var item = el("a", {
-                    class: "writing-card", href: post.link || "#",
-                    target: "_blank", rel: "noopener",
-                });
-                if (post.date)
-                    item.appendChild(el("time", { datetime: post.date, text: formatDate(post.date) }));
-                item.appendChild(el("h3", { text: post.title }));
-                if (post.excerpt)
-                    item.appendChild(el("p", { text: post.excerpt }));
-                item.appendChild(el("span", { class: "writing-more", text: "Read on LinkedIn →" }));
-                writing.appendChild(item);
-            });
-        }
-    }
-    /* ---- Contact ---- */
-    var SVG = function (paths) {
-        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
-            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + "</svg>";
-    };
-    var contactIcons = {
-        email: SVG('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>'),
-        github: SVG('<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>'),
-        linkedin: SVG('<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>'),
-    };
-    var linkIcon = SVG('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>');
-    var arrowIcon = SVG('<path d="M7 17 17 7M7 7h10v10"/>');
-    var contacts = $("#contact-links");
-    if (contacts) {
-        (data.contacts || []).forEach(function (c) {
-            var key = (c.label || "").toLowerCase();
-            var isMail = c.href.indexOf("mailto:") === 0;
-            var li = el("li");
-            li.appendChild(el("a", { href: c.href, target: isMail ? "_self" : "_blank", rel: "noopener" }, [
-                el("span", { class: "contact-method-icon", html: contactIcons[key] || linkIcon }),
-                el("span", { class: "contact-method-body" }, [
-                    el("span", { class: "contact-method-label", text: c.label }),
-                    el("span", { class: "contact-method-value", text: c.value }),
-                ]),
-                el("span", { class: "contact-method-arrow", html: arrowIcon }),
-            ]));
-            contacts.appendChild(li);
+        const posts = data.posts || [];
+        const section = document.getElementById("writing");
+        const navItem = (_a = qs('#nav-links a[href="#writing"]')) === null || _a === void 0 ? void 0 : _a.parentElement;
+        const hasPosts = posts.length > 0;
+        if (section)
+            section.hidden = !hasPosts;
+        if (navItem)
+            navItem.hidden = !hasPosts;
+        const postsFrag = document.createDocumentFragment();
+        posts.forEach((post) => {
+            const card = el("a", { class: "writing-card", href: post.link || "#", target: "_blank", rel: "noopener noreferrer" });
+            if (post.date)
+                card.appendChild(el("time", { datetime: post.date, text: formatDate(post.date) }));
+            card.appendChild(el("h3", { text: post.title }));
+            if (post.excerpt)
+                card.appendChild(el("p", { text: post.excerpt }));
+            card.appendChild(el("span", { class: "writing-more", text: "Read on LinkedIn →" }));
+            postsFrag.appendChild(card);
         });
+        writing.appendChild(postsFrag);
     }
-    /* ---- Experience (development + teaching) ---- */
-    function renderXp(listId, items) {
-        var ul = document.getElementById(listId);
-        if (!ul)
-            return;
-        (items || []).forEach(function (x) {
-            var li = el("li", { class: "xp-item" });
-            var head = el("div", { class: "xp-head" });
-            head.appendChild(el("h4", { text: x.role }));
-            if (x.period)
-                head.appendChild(el("span", { class: "xp-period", text: x.period }));
-            li.appendChild(head);
-            if (x.org)
-                li.appendChild(el("p", { class: "xp-org", text: x.org }));
-            if (x.meta)
-                li.appendChild(el("p", { class: "xp-meta", text: x.meta }));
-            if (x.points && x.points.length) {
-                var pts = el("ul", { class: "xp-points" });
-                x.points.forEach(function (pt) { pts.appendChild(el("li", { text: pt })); });
-                li.appendChild(pts);
-            }
-            ul.appendChild(li);
-        });
+    /* ---------------------------------------------------------------------------
+       Contact links
+       ------------------------------------------------------------------------ */
+    renderInto("contact-links", data.contacts, (c) => {
+        const key = (c.label || "").toLowerCase();
+        const isMail = c.href.indexOf("mailto:") === 0;
+        const li = el("li");
+        li.appendChild(el("a", { href: c.href, target: isMail ? "_self" : "_blank", rel: "noopener noreferrer" }, [
+            el("span", { class: "contact-method-icon", html: contactIcons[key] || linkIcon }),
+            el("span", { class: "contact-method-body" }, [
+                el("span", { class: "contact-method-label", text: c.label }),
+                el("span", { class: "contact-method-value", text: c.value }),
+            ]),
+            el("span", { class: "contact-method-arrow", html: arrowIcon }),
+        ]));
+        return li;
+    });
+    /* ---------------------------------------------------------------------------
+       Experience (development + teaching)
+       ------------------------------------------------------------------------ */
+    function renderXpItem(x) {
+        const li = el("li", { class: "xp-item" });
+        const head = el("div", { class: "xp-head" });
+        head.appendChild(el("h4", { text: x.role }));
+        if (x.period)
+            head.appendChild(el("span", { class: "xp-period", text: x.period }));
+        li.appendChild(head);
+        if (x.org)
+            li.appendChild(el("p", { class: "xp-org", text: x.org }));
+        if (x.meta)
+            li.appendChild(el("p", { class: "xp-meta", text: x.meta }));
+        if (x.points && x.points.length) {
+            const pts = el("ul", { class: "xp-points" });
+            x.points.forEach((pt) => pts.appendChild(el("li", { text: pt })));
+            li.appendChild(pts);
+        }
+        return li;
     }
     if (data.experience) {
-        renderXp("xp-development", data.experience.development);
-        renderXp("xp-teaching", data.experience.teaching);
+        renderInto("xp-development", data.experience.development, renderXpItem);
+        renderInto("xp-teaching", data.experience.teaching, renderXpItem);
     }
-    /* ---- Education ---- */
-    var eduList = $("#edu-list");
-    if (eduList) {
-        (data.education || []).forEach(function (e) {
-            var li = el("li", { class: "edu-item" });
-            var head = el("div", { class: "xp-head" });
-            head.appendChild(el("h4", { text: e.degree }));
-            if (e.period)
-                head.appendChild(el("span", { class: "xp-period", text: e.period }));
-            li.appendChild(head);
-            if (e.org)
-                li.appendChild(el("p", { class: "xp-org", text: e.org }));
-            if (e.note)
-                li.appendChild(el("p", { class: "edu-note", text: e.note }));
-            eduList.appendChild(li);
-        });
-    }
-    /* ---- Certificates (section hidden while empty) ---- */
-    var certList = $("#cert-list");
-    var certWrap = $("#certs-wrap");
-    if (certList && data.certificates && data.certificates.length) {
-        data.certificates.forEach(function (c) {
-            var li = el("li", { class: "cert-item" });
+    /* ---------------------------------------------------------------------------
+       Education
+       ------------------------------------------------------------------------ */
+    renderInto("edu-list", data.education, (e) => {
+        const li = el("li", { class: "edu-item" });
+        const head = el("div", { class: "xp-head" });
+        head.appendChild(el("h4", { text: e.degree }));
+        if (e.period)
+            head.appendChild(el("span", { class: "xp-period", text: e.period }));
+        li.appendChild(head);
+        if (e.org)
+            li.appendChild(el("p", { class: "xp-org", text: e.org }));
+        if (e.note)
+            li.appendChild(el("p", { class: "edu-note", text: e.note }));
+        return li;
+    });
+    /* ---------------------------------------------------------------------------
+       Certificates (section hidden while empty)
+       ------------------------------------------------------------------------ */
+    if (data.certificates && data.certificates.length) {
+        renderInto("cert-list", data.certificates, (c) => {
+            const li = el("li", { class: "cert-item" });
             li.appendChild(el("span", { class: "cert-name", text: c.name }));
-            var meta = [c.issuer, c.year].filter(Boolean).join(" · ");
+            const meta = [c.issuer, c.year].filter(Boolean).join(" · ");
             if (meta)
                 li.appendChild(el("span", { class: "cert-meta", text: meta }));
-            certList.appendChild(li);
+            return li;
         });
+        const certWrap = qs("#certs-wrap");
         if (certWrap)
             certWrap.hidden = false;
     }
-    /* ---- Mobile nav toggle ---- */
-    var toggle = $(".nav-toggle");
-    var navLinks = $("#nav-links");
+    /* ---------------------------------------------------------------------------
+       Mobile nav toggle
+       ------------------------------------------------------------------------ */
+    const toggle = qs(".nav-toggle");
+    const navLinks = qs("#nav-links");
     if (toggle && navLinks) {
-        toggle.addEventListener("click", function () {
-            var open = navLinks.classList.toggle("open");
+        toggle.addEventListener("click", () => {
+            const open = navLinks.classList.toggle("open");
             toggle.setAttribute("aria-expanded", String(open));
         });
-        navLinks.addEventListener("click", function (e) {
+        navLinks.addEventListener("click", (e) => {
             if (e.target.tagName === "A") {
                 navLinks.classList.remove("open");
                 toggle.setAttribute("aria-expanded", "false");
             }
         });
     }
-    /* ---- Theme toggle (light / dark) ---- */
-    var themeBtn = $("#theme-toggle");
+    /* ---------------------------------------------------------------------------
+       Theme toggle (light / dark)
+       ------------------------------------------------------------------------ */
+    const themeBtn = qs("#theme-toggle");
     if (themeBtn) {
-        var applyTheme = function (t) {
-            document.documentElement.setAttribute("data-theme", t);
+        const root = document.documentElement;
+        const applyTheme = (t) => {
+            var _a;
+            root.setAttribute("data-theme", t);
             themeBtn.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme");
-            var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta)
-                meta.setAttribute("content", t === "dark" ? "#0e1320" : "#fbfaf7");
+            (_a = qs('meta[name="theme-color"]')) === null || _a === void 0 ? void 0 : _a.setAttribute("content", t === "dark" ? "#0e1320" : "#fbfaf7");
         };
         // Sync aria-label + theme-color with whatever the inline <head> script set.
-        applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
-        themeBtn.addEventListener("click", function () {
-            var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+        themeBtn.addEventListener("click", () => {
+            const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
             try {
                 localStorage.setItem("theme", next);
             }
-            catch (e) { }
+            catch (_a) {
+                /* private mode / storage disabled — ignore */
+            }
             applyTheme(next);
         });
     }
-    /* ---- Active-section nav highlighting (scrollspy) ---- */
-    var navLinkEls = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[href^="#"]'));
-    var linkFor = {};
-    navLinkEls.forEach(function (a) {
-        var id = (a.getAttribute("href") || "").slice(1);
+    /* ---------------------------------------------------------------------------
+       Active-section nav highlighting (scrollspy)
+       ------------------------------------------------------------------------ */
+    const navLinkEls = Array.from(document.querySelectorAll('#nav-links a[href^="#"]'));
+    const linkFor = {};
+    navLinkEls.forEach((a) => {
+        const id = (a.getAttribute("href") || "").slice(1);
         if (id && document.getElementById(id))
             linkFor[id] = a;
     });
-    var spyIds = Object.keys(linkFor);
+    const spyIds = Object.keys(linkFor);
     if (spyIds.length && "IntersectionObserver" in window) {
-        var spy = new IntersectionObserver(function (entries) {
-            entries.forEach(function (en) {
-                if (en.isIntersecting) {
-                    navLinkEls.forEach(function (a) { a.classList.remove("active"); });
-                    var current = linkFor[en.target.id];
-                    if (current)
-                        current.classList.add("active");
-                }
+        const spy = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                var _a;
+                if (!entry.isIntersecting)
+                    return;
+                navLinkEls.forEach((a) => a.classList.remove("active"));
+                (_a = linkFor[entry.target.id]) === null || _a === void 0 ? void 0 : _a.classList.add("active");
             });
         }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
-        spyIds.forEach(function (id) { spy.observe(document.getElementById(id)); });
+        spyIds.forEach((id) => {
+            const target = document.getElementById(id);
+            if (target)
+                spy.observe(target);
+        });
     }
-    /* ---- Scroll-reveal: fade sections/cards up as they enter (motion-safe) ---- */
-    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* ---------------------------------------------------------------------------
+       Scroll-reveal: fade sections/cards up as they enter (motion-safe)
+       ------------------------------------------------------------------------ */
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!reduceMotion && "IntersectionObserver" in window) {
-        var revealSelectors = [".section-head", ".project-card", ".edu-item", ".xp-item", ".writing-card", ".contact-intro", ".contact-form"];
-        var revObs = new IntersectionObserver(function (entries, obs) {
-            entries.forEach(function (en) {
-                if (en.isIntersecting) {
-                    en.target.classList.add("in");
-                    obs.unobserve(en.target);
+        const revealSelectors = [".section-head", ".project-card", ".edu-item", ".xp-item", ".writing-card", ".contact-intro", ".contact-form"];
+        const revObs = new IntersectionObserver((entries, obs) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("in");
+                    obs.unobserve(entry.target);
                 }
             });
         }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-        revealSelectors.forEach(function (sel) {
-            Array.prototype.slice.call(document.querySelectorAll(sel)).forEach(function (el) {
-                el.classList.add("reveal");
-                revObs.observe(el);
+        revealSelectors.forEach((sel) => {
+            document.querySelectorAll(sel).forEach((node) => {
+                node.classList.add("reveal");
+                revObs.observe(node);
             });
         });
     }
-    /* ---- Toasts: timed, auto-dismissing notifications ---- */
-    function showToast(message, ms) {
-        ms = ms || 3500;
-        var wrap = document.getElementById("toast-wrap");
-        if (!wrap) {
-            wrap = el("div", { id: "toast-wrap", class: "toast-wrap", "aria-live": "polite" });
-            document.body.appendChild(wrap);
-        }
-        var toast = el("div", { class: "toast", role: "status" }, [message]);
-        wrap.appendChild(toast);
-        requestAnimationFrame(function () { toast.classList.add("show"); });
-        var dismiss = function () {
-            toast.classList.remove("show");
-            toast.classList.add("hide");
-            setTimeout(function () { if (toast.parentNode)
-                toast.remove(); }, 320);
-        };
-        toast.addEventListener("click", dismiss);
-        setTimeout(dismiss, ms);
-    }
-    window.showToast = showToast;
-    /* Surface a timed toast when someone acts on a contact/inquiry link. */
-    var inquiry = $(".inquiry");
-    if (inquiry) {
-        inquiry.addEventListener("click", function () { showToast("Opening your email app…"); });
-    }
-    var emailLink = document.querySelector('#contact-links a[href^="mailto:"]');
-    if (emailLink) {
-        emailLink.addEventListener("click", function () { showToast("Opening your email app…"); });
-    }
-    /* ---- Contact form: Web3Forms submit + ntfy phone push (mailto fallback) ---- */
-    var form = $("#contact-form");
-    var cfg = data.config || {};
-    function isSet(v) { return typeof v === "string" && v && v.indexOf("YOUR_") !== 0; }
+    /* ---------------------------------------------------------------------------
+       Surface a timed toast when someone acts on a contact/inquiry link
+       ------------------------------------------------------------------------ */
+    (_b = qs(".inquiry")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => showToast("Opening your email app…"));
+    (_c = qs('#contact-links a[href^="mailto:"]')) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => showToast("Opening your email app…"));
+    /* ---------------------------------------------------------------------------
+       Contact form: Web3Forms submit + ntfy phone push (mailto fallback)
+       ------------------------------------------------------------------------ */
+    const cfg = data.config;
+    const isSet = (v) => typeof v === "string" && v.length > 0 && v.indexOf("YOUR_") !== 0;
+    const form = qs("#contact-form");
     if (form) {
-        form.addEventListener("submit", function (e) {
+        const fieldIds = ["cf-name", "cf-email", "cf-msg"];
+        const setErr = (id, msg) => {
+            const input = document.getElementById(id);
+            const field = input === null || input === void 0 ? void 0 : input.closest(".field");
+            if (!field)
+                return;
+            field.classList.toggle("has-error", !!msg);
+            let fe = field.querySelector(".field-err");
+            if (msg) {
+                if (!fe) {
+                    fe = el("span", { class: "field-err" });
+                    field.appendChild(fe);
+                }
+                fe.textContent = msg;
+            }
+            else if (fe) {
+                fe.textContent = "";
+            }
+        };
+        form.addEventListener("submit", (e) => {
+            var _a;
             e.preventDefault();
-            var fd = new FormData(form);
+            const fd = new FormData(form);
             if (fd.get("botcheck"))
                 return; // honeypot tripped — silently drop
-            var name = (fd.get("name") || "").toString().trim();
-            var email = (fd.get("email") || "").toString().trim();
-            var message = (fd.get("message") || "").toString().trim();
+            // Hard-cap lengths in case the `maxlength` attributes are bypassed client-side —
+            // the real enforcement is server-side (Web3Forms), this just avoids sending junk.
+            const name = (fd.get("name") || "").toString().trim().slice(0, 100);
+            const email = (fd.get("email") || "").toString().trim().slice(0, 254);
+            const message = (fd.get("message") || "").toString().trim().slice(0, 5000);
             // Per-field required + format validation with inline error messages.
-            var setErr = function (id, msg) {
-                var inp = document.getElementById(id);
-                var field = inp && inp.closest(".field");
-                if (!field)
-                    return;
-                field.classList.toggle("has-error", !!msg);
-                var fe = field.querySelector(".field-err");
-                if (msg) {
-                    if (!fe) {
-                        fe = el("span", { class: "field-err" });
-                        field.appendChild(fe);
-                    }
-                    fe.textContent = msg;
-                }
-                else if (fe) {
-                    fe.textContent = "";
-                }
-            };
-            var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            var firstBad = "";
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            let firstBad = "";
             setErr("cf-name", name ? "" : "Please enter your name.");
             if (!name)
                 firstBad = firstBad || "cf-name";
-            setErr("cf-email", !email ? "Please enter your email." : (!emailOk ? "Enter a valid email address." : ""));
+            setErr("cf-email", !email ? "Please enter your email." : !emailOk ? "Enter a valid email address." : "");
             if (!email || !emailOk)
                 firstBad = firstBad || "cf-email";
             setErr("cf-msg", message ? "" : "Please enter a message.");
             if (!message)
                 firstBad = firstBad || "cf-msg";
             if (firstBad) {
-                var fb = document.getElementById(firstBad);
-                if (fb)
-                    fb.focus();
+                (_a = document.getElementById(firstBad)) === null || _a === void 0 ? void 0 : _a.focus();
                 showToast("Please fix the highlighted fields.");
                 return;
             }
             // Fallback while the form backend isn't configured: open the visitor's email.
             if (!isSet(cfg.web3formsKey)) {
-                var to = cfg.contactEmail || "taldanai@icloud.com";
-                var body = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")");
-                window.location.href = "mailto:" + to +
-                    "?subject=" + encodeURIComponent("Inquiry from danaital.com") + "&body=" + body;
+                const to = cfg.contactEmail || "taldanai@icloud.com";
+                const body = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")");
+                window.location.href =
+                    "mailto:" + to + "?subject=" + encodeURIComponent("Inquiry from danaital.com") + "&body=" + body;
                 showToast("Opening your email app…");
                 return;
             }
-            var btn = form.querySelector("button[type=submit]");
+            const btn = form.querySelector("button[type=submit]");
             if (btn)
                 btn.disabled = true;
             showToast("Sending…");
@@ -396,18 +445,20 @@
                     access_key: cfg.web3formsKey,
                     subject: "New inquiry from danaital.com",
                     from_name: "danaital.com",
-                    name: name, email: email, message: message,
+                    name,
+                    email,
+                    message,
                 }),
             })
-                .then(function (r) { return r.json(); })
-                .then(function (json) {
+                .then((r) => r.json())
+                .then((json) => {
                 if (json && json.success) {
                     if (isSet(cfg.ntfyTopic)) {
                         fetch("https://ntfy.sh/" + cfg.ntfyTopic, {
                             method: "POST",
                             headers: { Title: "New inquiry — danaital.com", Tags: "envelope" },
                             body: name + " (" + email + "): " + message,
-                        }).catch(function () { });
+                        }).catch(() => { });
                     }
                     form.reset();
                     showToast("Thanks, " + name.split(" ")[0] + "! Your message was sent.", 5000);
@@ -416,35 +467,30 @@
                     showToast("Couldn't send — please email me directly.", 5000);
                 }
             })
-                .catch(function () { showToast("Network error — please email me directly.", 5000); })
-                .then(function () { if (btn)
-                btn.disabled = false; });
+                .catch(() => showToast("Network error — please email me directly.", 5000))
+                .then(() => {
+                if (btn)
+                    btn.disabled = false;
+            });
         });
         // Clear a field's error as soon as the user starts fixing it.
-        ["cf-name", "cf-email", "cf-msg"].forEach(function (id) {
-            var inp = document.getElementById(id);
-            if (inp)
-                inp.addEventListener("input", function () {
-                    var field = inp.closest(".field");
-                    if (field) {
-                        field.classList.remove("has-error");
-                        var fe = field.querySelector(".field-err");
-                        if (fe)
-                            fe.textContent = "";
-                    }
-                });
+        fieldIds.forEach((id) => {
+            const input = document.getElementById(id);
+            input === null || input === void 0 ? void 0 : input.addEventListener("input", () => {
+                const field = input.closest(".field");
+                if (!field)
+                    return;
+                field.classList.remove("has-error");
+                const fe = field.querySelector(".field-err");
+                if (fe)
+                    fe.textContent = "";
+            });
         });
     }
-    /* ---- Year ---- */
-    var year = $("#year");
+    /* ---------------------------------------------------------------------------
+       Footer year
+       ------------------------------------------------------------------------ */
+    const year = qs("#year");
     if (year)
         year.textContent = String(new Date().getFullYear());
-    function formatDate(iso) {
-        try {
-            return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        }
-        catch (e) {
-            return iso;
-        }
-    }
 })();

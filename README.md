@@ -64,3 +64,7 @@ GitHub Actions ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml))
 runs `npm ci && npm run build` then publishes to GitHub Pages on every push to
 `master`. The `CNAME` file pins `danaital.com`; point the domain there via DNS
 (A records to GitHub Pages IPs + a `www` CNAME).
+
+Before upload, the CI minifies the **staged copy** of `assets/*.js` / `styles.css`
+with `esbuild` (the `minify` script) — the repo's own `assets/` files stay
+human-readable for editing; only the deployed bytes are minified.

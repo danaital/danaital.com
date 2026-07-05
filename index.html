@@ -4,18 +4,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Security headers (best-effort via meta — GitHub Pages serves static
+       files with no custom HTTP headers, so this is the only way to ship a
+       CSP here; frame-ancestors/X-Frame-Options and X-Content-Type-Options
+       can only be set via real HTTP headers and are NOT enforced by this
+       meta tag — if you ever move off GitHub Pages, set them at the host/CDN
+       level instead). -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://api.web3forms.com https://ntfy.sh;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+  " />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
   <!-- Apply saved/system theme before first paint (avoids flash of wrong theme) -->
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem("theme");
-        if (t !== "light" && t !== "dark") {
-          t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        document.documentElement.setAttribute("data-theme", t);
-      } catch (e) {}
-    })();
-  </script>
+  <script src="assets/theme-init.js"></script>
 
   <title>Tal Danai — Full Stack Developer</title>
   <meta name="description" content="Tal Danai — full-stack developer building end-to-end products across React, React Native, NestJS and FastAPI. Intro to Computer Science recitation instructor." />
@@ -118,10 +128,9 @@
           </div>
         </div>
         <div class="hero-portrait">
-          <img class="portrait" src="assets/portrait.webp" alt="Tal Danai"
-               width="230" height="230"
-               onerror="this.style.display='none';var m=document.getElementById('mono-fallback');if(m)m.style.display='grid';" />
-          <div class="monogram" id="mono-fallback" aria-label="Tal Danai monogram" role="img" style="display:none">
+          <img class="portrait" id="portrait-img" src="assets/portrait.webp" alt="Tal Danai"
+               width="230" height="230" fetchpriority="high" decoding="async" />
+          <div class="monogram js-hidden" id="mono-fallback" aria-label="Tal Danai monogram" role="img">
             <span>TD</span>
           </div>
           <a class="inquiry" href="mailto:taldanai@icloud.com?subject=Inquiry">
@@ -222,18 +231,18 @@
             <div class="form-fields">
               <div class="field">
                 <label for="cf-name">Name</label>
-                <input id="cf-name" name="name" type="text" autocomplete="name" required />
+                <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required />
               </div>
               <div class="field">
                 <label for="cf-email">Email</label>
-                <input id="cf-email" name="email" type="email" autocomplete="email" required />
+                <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="254" required />
               </div>
               <div class="field field-full">
                 <label for="cf-msg">Message</label>
-                <textarea id="cf-msg" name="message" rows="5" required></textarea>
+                <textarea id="cf-msg" name="message" rows="5" maxlength="5000" required></textarea>
               </div>
               <!-- honeypot: bots fill this, humans don't -->
-              <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
+              <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" class="js-hidden" />
               <div class="field-full">
                 <button class="btn btn-primary btn-block" type="submit">Send message</button>
                 <p class="form-note">Or email me at <a href="mailto:taldanai@icloud.com">taldanai@icloud.com</a></p>

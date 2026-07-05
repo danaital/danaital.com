@@ -2,7 +2,7 @@
    Site content — edit this file, then `npm run build` to compile to assets/.
    ========================================================================== */
 
-(window as any).SITE_DATA = {
+window.SITE_DATA = {
   /* -------------------------------------------------------------------------
      Contact form + phone-notification config.
      1. web3formsKey: get a FREE key at https://web3forms.com (no account —
@@ -221,4 +221,4 @@
   certificates: [
     // { name: "Example Certificate", issuer: "Issuer", year: "2025" },
   ],
-};
+} satisfies SiteData;
