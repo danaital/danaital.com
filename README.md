@@ -55,7 +55,7 @@ the `posts` array — each `{ title, excerpt, date, link }`.
 
 ```bash
 npm run build
-node .claude/server.js     # serves on http://localhost:3000
+node .claude/server.js     # serves on http://localhost:8123
 ```
 
 ## Deployment
