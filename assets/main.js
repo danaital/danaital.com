@@ -7,7 +7,7 @@
    ========================================================================== */
 (function () {
     "use strict";
-    var _a, _b, _c;
+    var _a, _b;
     const data = window.SITE_DATA;
     if (!data)
         return;
@@ -369,8 +369,7 @@
     /* ---------------------------------------------------------------------------
        Surface a timed toast when someone acts on a contact/inquiry link
        ------------------------------------------------------------------------ */
-    (_b = qs(".inquiry")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => showToast("Opening your email app…"));
-    (_c = qs('#contact-links a[href^="mailto:"]')) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => showToast("Opening your email app…"));
+    (_b = qs('#contact-links a[href^="mailto:"]')) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => showToast("Opening your email app…"));
     /* ---------------------------------------------------------------------------
        Contact form: Web3Forms submit + ntfy phone push (mailto fallback)
        ------------------------------------------------------------------------ */

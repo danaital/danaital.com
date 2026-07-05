@@ -398,7 +398,6 @@
   /* ---------------------------------------------------------------------------
      Surface a timed toast when someone acts on a contact/inquiry link
      ------------------------------------------------------------------------ */
-  qs(".inquiry")?.addEventListener("click", () => showToast("Opening your email app…"));
   qs('#contact-links a[href^="mailto:"]')?.addEventListener("click", () => showToast("Opening your email app…"));
 
   /* ---------------------------------------------------------------------------
