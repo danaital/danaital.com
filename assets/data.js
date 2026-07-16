@@ -192,12 +192,6 @@ window.SITE_DATA = {
     /* Education. Verify degrees/dates. */
     education: [
         {
-            degree: "M.Sc., Machine Learning & Data Science",
-            org: "Reichman University (IDC Herzliya)",
-            period: "Sep 2025 – Present",
-            note: "",
-        },
-        {
             degree: "B.Sc., Computer Science",
             org: "Reichman University (IDC Herzliya)",
             period: "2018 – 2023",
